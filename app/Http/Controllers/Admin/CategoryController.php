@@ -17,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return new CategoryCollection(Category::paginate(5));
+        return new CategoryCollection(Category::with('products')->paginate(5));
     }
 
     /**
@@ -41,6 +41,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        $category = Category::with('products')->findOrFail($category->id);
         return new CategoryResource($category);
     }
 
