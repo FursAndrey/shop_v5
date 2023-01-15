@@ -17,7 +17,7 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        return new PropertyCollection(Property::with('products')->paginate(5));
+        return new PropertyCollection(Property::with('products', 'options')->paginate(5));
     }
 
     /**
@@ -41,7 +41,7 @@ class PropertyController extends Controller
      */
     public function show(Property $property)
     {
-        $property = Property::with('products')->findOrFail($property->id);
+        $property = Property::with('products', 'options')->findOrFail($property->id);
         return new PropertyResource($property);
     }
 

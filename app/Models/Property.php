@@ -19,4 +19,9 @@ class Property extends Model
     {
         return $this->belongsToMany(Product::class)->withTimestamps();;
     }
+
+    public function options():HasMany
+    {
+        return $this->hasMany(Option::class);
+    }
 }

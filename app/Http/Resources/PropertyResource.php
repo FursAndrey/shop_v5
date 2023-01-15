@@ -19,6 +19,7 @@ class PropertyResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'products' => new ProductCollection($this->whenLoaded('products')),
+            'options' => new OptionCollection($this->whenLoaded('options')),
         ];
     }
 }
