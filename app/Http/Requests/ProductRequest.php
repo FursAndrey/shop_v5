@@ -27,6 +27,8 @@ class ProductRequest extends FormRequest
             'name' => 'required|string',
             'description' => 'required|string',
             'category_id' => 'required|integer|exists:categories,id',
+            'property_id' => 'required|array',
+            'property_id.*' => 'required|integer|exists:properties,id',
         ];
     }
 }
