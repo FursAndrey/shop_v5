@@ -20,6 +20,7 @@ class SkuResource extends JsonResource
             'count' => $this->count,
             'price' => $this->price,
             'product' => new ProductResource($this->whenLoaded('product')),
+            'options' => new OptionCollection($this->whenLoaded('options')),
         ];
     }
 }

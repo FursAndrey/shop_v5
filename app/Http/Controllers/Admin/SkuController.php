@@ -18,7 +18,7 @@ class SkuController extends Controller
      */
     public function index()
     {
-        return new SkuCollection(Sku::with(['product'])->paginate(5));
+        return new SkuCollection(Sku::with(['product', 'options'])->paginate(5));
     }
 
     /**
@@ -30,6 +30,7 @@ class SkuController extends Controller
     public function store(SkuRequest $request)
     {
         $sku = Sku::create($request->validated());
+        $sku->options()->sync($request->option_id);
 
         return new SkuResource($sku);
     }
@@ -42,7 +43,7 @@ class SkuController extends Controller
      */
     public function show(Sku $sku)
     {
-        $sku = Sku::with('product')->findOrFail($sku->id);
+        $sku = Sku::with(['product', 'options'])->findOrFail($sku->id);
         return new SkuResource($sku);
     }
 
@@ -56,6 +57,7 @@ class SkuController extends Controller
     public function update(SkuRequest $request, Sku $sku)
     {
         $sku->update($request->validated());
+        $sku->options()->sync($request->option_id);
 
         return new SkuResource($sku);
     }
@@ -68,6 +70,7 @@ class SkuController extends Controller
      */
     public function destroy(Sku $sku)
     {
+        $sku->options()->detach();
         $sku->delete();
 
         return response()->noContent();
