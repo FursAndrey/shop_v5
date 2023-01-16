@@ -7,22 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Option extends Model
+class Sku extends Model
 {
     use HasFactory;
-
+    
     protected $fillable = [
-        'name',
-        'property_id',
+        'product_id',
+        'price',
+        'count',
     ];
 
-    public function property():BelongsTo
+    public function product():BelongsTo
     {
-        return $this->belongsTo(Property::class);
+        return $this->belongsTo(Product::class);
     }
 
-    public function skus():BelongsToMany
+    public function options():BelongsToMany
     {
-        return $this->belongsToMany(Sku::class);
+        return $this->belongsToMany(Option::class)->withTimestamps();
     }
 }

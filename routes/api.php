@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PropertyController;
+use App\Http\Controllers\Admin\SkuController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,3 +29,4 @@ Route::apiResource('currencies', CurrencyController::class);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('properties', PropertyController::class);
 Route::apiResource('options', OptionController::class);
+Route::apiResource('skus', SkuController::class);
