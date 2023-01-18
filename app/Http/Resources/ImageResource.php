@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SkuResource extends JsonResource
+class ImageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,8 @@ class SkuResource extends JsonResource
         // return parent::toArray($request);
         return [
             'id' => $this->id,
-            'count' => $this->count,
-            'price' => $this->price,
-            'product' => new ProductResource($this->whenLoaded('product')),
-            'options' => new OptionCollection($this->whenLoaded('options')),
-            'images' => new ImageCollection($this->whenLoaded('images')),
+            'file' => $this->file,
+            'sku' => new SkuResource($this->whenLoaded('sku')),
         ];
     }
 }

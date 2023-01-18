@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sku extends Model
 {
@@ -25,5 +26,10 @@ class Sku extends Model
     public function options():BelongsToMany
     {
         return $this->belongsToMany(Option::class)->withTimestamps();
+    }
+
+    public function images():HasMany
+    {
+        return $this->hasMany(Image::class);
     }
 }
