@@ -40,6 +40,7 @@ class PropertyTest extends TestCase
                 'id' => $property->id,
                 'name' => $property->name,
                 'products' => [],
+                'options' => [],
             ]
         );
     }
