@@ -69,6 +69,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $product->properties()->detach();
         $product->delete();
 
         return response()->noContent();
