@@ -75,6 +75,7 @@ class CategoryTest extends TestCase
         $category = [
             'name' => 'cat',
         ];
+        $this->assertDatabaseCount('categories', 0);
         $response = $this->post('/api/categories', $category);
 
         $this->assertDatabaseCount('categories', 1);
