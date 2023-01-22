@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SkuRequest;
 use App\Http\Resources\SkuCollection;
 use App\Http\Resources\SkuResource;
+use App\Models\Image;
 use App\Models\Sku;
-use Illuminate\Http\Request;
 
 class SkuController extends Controller
 {
@@ -18,7 +18,7 @@ class SkuController extends Controller
      */
     public function index()
     {
-        return new SkuCollection(Sku::with(['product', 'options'])->paginate(5));
+        return new SkuCollection(Sku::with(['product', 'options', 'images'])->paginate(5));
     }
 
     /**
@@ -32,6 +32,15 @@ class SkuController extends Controller
         $sku = Sku::create($request->validated());
         $sku->options()->sync($request->option_id);
 
+        if (!is_null($request->image)) {
+            foreach ($request->image as $image) {
+                $fileName = $image->store('uploads', 'public');
+                Image::create([
+                    'sku_id' => $sku->id,
+                    'file' => $fileName
+                ]);
+            }
+        }
         return new SkuResource($sku);
     }
 
@@ -43,7 +52,7 @@ class SkuController extends Controller
      */
     public function show(Sku $sku)
     {
-        $sku = Sku::with(['product', 'options'])->findOrFail($sku->id);
+        $sku = Sku::with(['product', 'options', 'images'])->findOrFail($sku->id);
         return new SkuResource($sku);
     }
 
@@ -59,6 +68,15 @@ class SkuController extends Controller
         $sku->update($request->validated());
         $sku->options()->sync($request->option_id);
 
+        if (!is_null($request->image)) {
+            foreach ($request->image as $image) {
+                $fileName = $image->store('uploads', 'public');
+                Image::create([
+                    'sku_id' => $sku->id,
+                    'file' => $fileName
+                ]);
+            }
+        }
         return new SkuResource($sku);
     }
 
@@ -71,6 +89,16 @@ class SkuController extends Controller
     public function destroy(Sku $sku)
     {
         $sku->options()->detach();
+
+        if (!is_null($sku->images)) {
+            foreach ($sku->images as $image) {
+                if (file_exists($image->file_for_delete)) {
+                    unlink($image->file_for_delete);
+                }
+                $image->delete();
+            }
+        }
+
         $sku->delete();
 
         return response()->noContent();

@@ -29,6 +29,8 @@ class SkuRequest extends FormRequest
             'count' => 'required|integer|min:0',
             'option_id' => 'required|array',
             'option_id.*' => 'required|integer|exists:options,id',
+            'img' => 'nullable|array',
+            'img.*' => 'image|mimes:jpeg,png,jpg',
         ];
     }
 }
