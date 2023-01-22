@@ -101,7 +101,7 @@ class CategoryTest extends TestCase
             'name' => 'cat',
         ];
         $category = Category::create($oldCategory);
-        $this->assertDatabaseHas('categories', ['name' => 'cat']);
+        $this->assertDatabaseHas('categories', ['name' => $oldCategory['name']]);
 
         $newCategory = [
             'name' => 'new cat',
