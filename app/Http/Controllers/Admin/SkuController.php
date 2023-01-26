@@ -31,9 +31,9 @@ class SkuController extends Controller
     {
         $sku = Sku::create($request->validated());
         $sku->options()->sync($request->option_id);
-
-        if (!is_null($request->image)) {
-            foreach ($request->image as $image) {
+        
+        if (!is_null($request->img)) {
+            foreach ($request->img as $image) {
                 $fileName = $image->store('uploads', 'public');
                 Image::create([
                     'sku_id' => $sku->id,
@@ -68,8 +68,8 @@ class SkuController extends Controller
         $sku->update($request->validated());
         $sku->options()->sync($request->option_id);
 
-        if (!is_null($request->image)) {
-            foreach ($request->image as $image) {
+        if (!is_null($request->img)) {
+            foreach ($request->img as $image) {
                 $fileName = $image->store('uploads', 'public');
                 Image::create([
                     'sku_id' => $sku->id,
