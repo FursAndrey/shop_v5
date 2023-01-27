@@ -30,4 +30,4 @@ Route::apiResource('products', ProductController::class);
 Route::apiResource('properties', PropertyController::class);
 Route::apiResource('options', OptionController::class);
 Route::apiResource('skus', SkuController::class);
-Route::post('skus/{sku}', [SkuController::class, 'update'])->name('skus.update');
+// Route::post('skus/{sku}', [SkuController::class, 'update'])->name('skus.update');

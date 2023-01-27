@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Currency;
+use App\Actions\CreateCurrencyAction;
+use App\Actions\TestingActions\GetTestCurrencyAction;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -27,11 +29,8 @@ class CurrencyTest extends TestCase
     
     public function test_index_page_json_with_data()
     {
-        $currency = Currency::create(
-            [
-                'code' => 'cat',
-                'rate' => 15.5,
-            ]
+        $currency = (new CreateCurrencyAction)(
+            (new GetTestCurrencyAction)()
         );
 
         $response = $this->get('/api/currencies');
@@ -47,11 +46,8 @@ class CurrencyTest extends TestCase
     
     public function test_show_page_status_200()
     {
-        $currency = Currency::create(
-            [
-                'code' => 'cat',
-                'rate' => 15.5,
-            ]
+        $currency = (new CreateCurrencyAction)(
+            (new GetTestCurrencyAction)()
         );
 
         $response = $this->get('/api/currencies/'.$currency->id);
@@ -61,11 +57,8 @@ class CurrencyTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $currency = Currency::create(
-            [
-                'code' => 'cat',
-                'rate' => 15.5,
-            ]
+        $currency = (new CreateCurrencyAction)(
+            (new GetTestCurrencyAction)()
         );
 
         $response = $this->get('/api/currencies/'.$currency->id);
@@ -75,10 +68,7 @@ class CurrencyTest extends TestCase
 
     public function test_store()
     {
-        $currency = [
-            'code' => 'cat',
-            'rate' => 15.5,
-        ];
+        $currency = (new GetTestCurrencyAction)();
         $this->assertDatabaseCount('currencies', 0);
         $response = $this->post('/api/currencies', $currency);
 
@@ -88,11 +78,8 @@ class CurrencyTest extends TestCase
 
     public function test_destroy()
     {
-        $currency = Currency::create(
-            [
-                'code' => 'cat',
-                'rate' => 15.5,
-            ]
+        $currency = (new CreateCurrencyAction)(
+            (new GetTestCurrencyAction)()
         );
         
         $this->assertDatabaseHas('currencies', ['id' => $currency->id]);
@@ -102,17 +89,11 @@ class CurrencyTest extends TestCase
 
     public function test_update()
     {
-        $oldCurrency = [
-            'code' => 'cat',
-            'rate' => 15.5,
-        ];
-        $currency = Currency::create($oldCurrency);
-        $this->assertDatabaseHas('currencies', ['code' => $oldCurrency['code']]);
+        $oldCurrency = (new GetTestCurrencyAction)();
+        $currency = (new CreateCurrencyAction)($oldCurrency);
+        $this->assertDatabaseHas('currencies', $oldCurrency);
 
-        $newCurrency = [
-            'code' => 'QWE',
-            'rate' => 15.5,
-        ];
+        $newCurrency = (new GetTestCurrencyAction)();
         $this->put('/api/currencies/'.$currency->id, $newCurrency);
         
         $this->assertDatabaseMissing('currencies', $oldCurrency);

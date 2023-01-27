@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\CreateCurrencyAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CurrencyRequest;
 use App\Http\Resources\CurrencyCollection;
@@ -29,7 +30,7 @@ class CurrencyController extends Controller
      */
     public function store(CurrencyRequest $request)
     {
-        $currency = Currency::create($request->validated());
+        $currency = (new CreateCurrencyAction)($request->validated());
 
         return new CurrencyResource($currency);
     }
