@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Category;
+use App\Actions\CreateCategoryAction;
+use App\Actions\TestingActions\GetTestCategoryAction;
+
 use App\Models\Image;
 use App\Models\Option;
 use App\Models\Product;
@@ -46,10 +48,8 @@ class SkuTest extends TestCase
                 'property_id' => $property->id,
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -113,10 +113,8 @@ class SkuTest extends TestCase
                 'property_id' => $property->id,
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -157,10 +155,8 @@ class SkuTest extends TestCase
                 'property_id' => $property->id,
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -201,10 +197,8 @@ class SkuTest extends TestCase
                 'property_id' => $property->id,
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -255,10 +249,8 @@ class SkuTest extends TestCase
                 'property_id' => $property->id,
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -317,10 +309,8 @@ class SkuTest extends TestCase
                 'property_id' => $property->id,
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -366,10 +356,8 @@ class SkuTest extends TestCase
                 'property_id' => $property->id,
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -424,10 +412,8 @@ class SkuTest extends TestCase
                 'property_id' => $property->id,
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -500,10 +486,8 @@ class SkuTest extends TestCase
                 'property_id' => $property->id,
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [

@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Category;
+use App\Actions\CreateCategoryAction;
+use App\Actions\TestingActions\GetTestCategoryAction;
+
 use App\Models\Product;
 use App\Models\Property;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -35,10 +37,8 @@ class ProductTest extends TestCase
                 'name' => 'prop',
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -84,10 +84,8 @@ class ProductTest extends TestCase
                 'name' => 'prop',
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -112,10 +110,8 @@ class ProductTest extends TestCase
                 'name' => 'prop',
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -140,10 +136,8 @@ class ProductTest extends TestCase
                 'name' => 'prop',
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         
         $product = [
@@ -178,10 +172,8 @@ class ProductTest extends TestCase
                 'name' => 'prop',
             ]
         );
-        $category = Category::create(
-            [
-                'name' => 'cat',
-            ]
+        $category = (new CreateCategoryAction)(
+            (new GetTestCategoryAction)()
         );
         $product = Product::create(
             [
@@ -211,7 +203,7 @@ class ProductTest extends TestCase
                 'name' => 'prop',
             ]
         );
-        $category = Category::create(
+        $category = (new CreateCategoryAction)(
             [
                 'name' => 'cat',
             ]
