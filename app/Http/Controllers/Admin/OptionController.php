@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\CreateOptionAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OptionRequest;
 use App\Http\Resources\OptionCollection;
@@ -28,7 +29,7 @@ class OptionController extends Controller
      */
     public function store(OptionRequest $request)
     {
-        $option = Option::create($request->validated());
+        $option = (new CreateOptionAction)($request->validated());
 
         return new OptionResource($option);
     }

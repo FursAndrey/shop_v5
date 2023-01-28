@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\CreatePropertyAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PropertyRequest;
 use App\Http\Resources\PropertyCollection;
@@ -28,7 +29,7 @@ class PropertyController extends Controller
      */
     public function store(PropertyRequest $request)
     {
-        $category = Property::create($request->validated());
+        $category = (new CreatePropertyAction)($request->validated());
 
         return new PropertyResource($category);
     }

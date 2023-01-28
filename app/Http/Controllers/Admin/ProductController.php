@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\CreatePrductAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductCollection;
@@ -28,7 +29,7 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        $product = Product::create($request->validated());
+        $product = (new CreatePrductAction)($request->validated());
         $product->properties()->sync($request->property_id);
 
         return new ProductResource($product);
