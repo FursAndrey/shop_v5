@@ -3,10 +3,10 @@
 namespace Tests\Feature;
 
 use App\Actions\CreateCategoryAction;
+use App\Actions\CreatePropertyAction;
 use App\Actions\TestingActions\GetTestCategoryAction;
-
+use App\Actions\TestingActions\GetTestPropertyAction;
 use App\Models\Product;
-use App\Models\Property;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
@@ -32,10 +32,8 @@ class ProductTest extends TestCase
 
     public function test_index_page_json_with_data()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -79,10 +77,8 @@ class ProductTest extends TestCase
     
     public function test_show_page_status_200()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -105,10 +101,8 @@ class ProductTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -131,10 +125,8 @@ class ProductTest extends TestCase
 
     public function test_store()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -167,10 +159,8 @@ class ProductTest extends TestCase
 
     public function test_destroy()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -198,10 +188,8 @@ class ProductTest extends TestCase
 
     public function test_update()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $category = (new CreateCategoryAction)(
             [

@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Property;
+use App\Actions\CreatePropertyAction;
+use App\Actions\TestingActions\GetTestPropertyAction;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -27,10 +29,8 @@ class PropertyTest extends TestCase
 
     public function test_index_page_json_with_data()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
 
         $response = $this->get('/api/properties');
@@ -47,10 +47,8 @@ class PropertyTest extends TestCase
     
     public function test_show_page_status_200()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
 
         $response = $this->get('/api/properties/'.$property->id);
@@ -60,10 +58,8 @@ class PropertyTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
 
         $response = $this->get('/api/properties/'.$property->id);
@@ -73,11 +69,9 @@ class PropertyTest extends TestCase
 
     public function test_store()
     {
-        $property = [
-            'name' => 'prop',
-        ];
+        $property = (new GetTestPropertyAction)();
         $this->assertDatabaseCount('properties', 0);
-        $response = $this->post('/api/properties', $property);
+        $this->post('/api/properties', $property);
 
         $this->assertDatabaseCount('properties', 1);
         $this->assertDatabaseHas('properties', $property);
@@ -85,10 +79,8 @@ class PropertyTest extends TestCase
 
     public function test_destroy()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         
         $this->assertDatabaseHas('properties', ['id' => $property->id]);
@@ -98,15 +90,11 @@ class PropertyTest extends TestCase
 
     public function test_update()
     {
-        $oldProperty = [
-            'name' => 'prop',
-        ];
-        $property = Property::create($oldProperty);
-        $this->assertDatabaseHas('properties', ['name' => $oldProperty['name']]);
+        $oldProperty = (new GetTestPropertyAction)();
+        $property = (new CreatePropertyAction)($oldProperty);
+        $this->assertDatabaseHas('properties', $oldProperty);
 
-        $newProperty = [
-            'name' => 'new prop',
-        ];
+        $newProperty = (new GetTestPropertyAction)();
         $this->put('/api/properties/'.$property->id, $newProperty);
         
         $this->assertDatabaseMissing('properties', $oldProperty);

@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Actions\CreateCategoryAction;
+use App\Actions\CreatePropertyAction;
 use App\Actions\TestingActions\GetTestCategoryAction;
-
+use App\Actions\TestingActions\GetTestPropertyAction;
 use App\Models\Image;
 use App\Models\Option;
 use App\Models\Product;
-use App\Models\Property;
 use App\Models\Sku;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -37,10 +37,8 @@ class SkuTest extends TestCase
 
     public function test_index_page_json_with_data()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $option = Option::create(
             [
@@ -102,10 +100,8 @@ class SkuTest extends TestCase
 
     public function test_show_page_status_200()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $option = Option::create(
             [
@@ -144,10 +140,8 @@ class SkuTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $option = Option::create(
             [
@@ -186,10 +180,8 @@ class SkuTest extends TestCase
 
     public function test_store_without_images()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $option = Option::create(
             [
@@ -238,10 +230,8 @@ class SkuTest extends TestCase
 
     public function test_store_with_images()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $option = Option::create(
             [
@@ -298,10 +288,8 @@ class SkuTest extends TestCase
 
     public function test_destroy_without_images()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $option = Option::create(
             [
@@ -345,10 +333,8 @@ class SkuTest extends TestCase
     
     public function test_destroy_with_images()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $option = Option::create(
             [
@@ -401,10 +387,8 @@ class SkuTest extends TestCase
 
     public function test_update_put_with_images()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $option = Option::create(
             [
@@ -475,10 +459,8 @@ class SkuTest extends TestCase
 
     public function test_update_patch_with_images()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
         $option = Option::create(
             [
