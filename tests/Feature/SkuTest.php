@@ -3,20 +3,24 @@
 namespace Tests\Feature;
 
 use App\Actions\CreateCategoryAction;
+use App\Actions\CreateImageAction;
 use App\Actions\CreateOptionAction;
 use App\Actions\CreatePrductAction;
 use App\Actions\CreatePropertyAction;
+use App\Actions\CreateSkuAction;
+use App\Actions\TestingActions\CreateTestSkuOptionRelationAction;
 use App\Actions\TestingActions\GetTestCategoryAction;
+use App\Actions\TestingActions\GetTestImageAction;
+use App\Actions\TestingActions\GetTestInsertedSkuIDAction;
 use App\Actions\TestingActions\GetTestOptionAction;
 use App\Actions\TestingActions\GetTestProductAction;
 use App\Actions\TestingActions\GetTestPropertyAction;
-use App\Models\Image;
-use App\Models\Product;
-use App\Models\Sku;
+use App\Actions\TestingActions\GetTestSkuWithImageAction;
+use App\Actions\TestingActions\GetTestSkuWithoutImageAction;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -52,21 +56,10 @@ class SkuTest extends TestCase
         $product = (new CreatePrductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
-        $sku = Sku::create(
-            [
-                'price' => 15.5,
-                'count' => 4,
-                'product_id' => $product->id,
-                'option_id' => [
-                    $option->id,
-                ],
-            ]
+        $sku = (new CreateSkuAction)(
+            (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
-        DB::table('option_sku')->insert(
-            [
-                ['sku_id'=>$sku->id, 'option_id'=>$option->id],
-            ]
-        );
+        (new CreateTestSkuOptionRelationAction)($sku->id, $option->id);
 
         $response = $this->get('/api/skus');
         
@@ -105,15 +98,8 @@ class SkuTest extends TestCase
         $product = (new CreatePrductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
-        $sku = Sku::create(
-            [
-                'price' => 15.5,
-                'count' => 4,
-                'product_id' => $product->id,
-                'option_id' => [
-                    $option->id,
-                ],
-            ]
+        $sku = (new CreateSkuAction)(
+            (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
 
         $response = $this->get('/api/skus/'.$sku->id);
@@ -135,15 +121,8 @@ class SkuTest extends TestCase
         $product = (new CreatePrductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
-        $sku = Sku::create(
-            [
-                'price' => 15.5,
-                'count' => 4,
-                'product_id' => $product->id,
-                'option_id' => [
-                    $option->id,
-                ],
-            ]
+        $sku = (new CreateSkuAction)(
+            (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
 
         $response = $this->get('/api/skus/'.$sku->id);
@@ -166,14 +145,7 @@ class SkuTest extends TestCase
             (new GetTestProductAction)($property->id, $category->id)
         );
         
-        $sku = [
-            'price' => 15.5,
-            'count' => 4,
-            'product_id' => $product->id,
-            'option_id' => [
-                $option->id,
-            ],
-        ];
+        $sku = (new GetTestSkuWithoutImageAction)($product->id, $option->id);
 
         $this->assertDatabaseCount('skus', 0);
         $this->post('/api/skus', $sku);
@@ -208,17 +180,7 @@ class SkuTest extends TestCase
         Storage::fake('public');
         $file = UploadedFile::fake()->image('test.jpg');
         
-        $sku = [
-            'price' => 15.5,
-            'count' => 4,
-            'product_id' => $product->id,
-            'option_id' => [
-                $option->id,
-            ],
-            'img' => [
-                $file
-            ],
-        ];
+        $sku = (new GetTestSkuWithImageAction)($product->id, $option->id, $file);
         
         $this->assertDatabaseCount('skus', 0);
         Storage::disk('public')->assertMissing('uploads/'.$file->hashName());
@@ -253,21 +215,10 @@ class SkuTest extends TestCase
         $product = (new CreatePrductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
-        $sku = Sku::create(
-            [
-                'price' => 15.5,
-                'count' => 4,
-                'product_id' => $product->id,
-                'option_id' => [
-                    $option->id,
-                ],
-            ]
+        $sku = (new CreateSkuAction)(
+            (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
-        DB::table('option_sku')->insert(
-            [
-                ['sku_id'=>$sku->id, 'option_id'=>$option->id],
-            ]
-        );
+        (new CreateTestSkuOptionRelationAction)($sku->id, $option->id);
         
         $this->assertDatabaseHas('skus', ['id' => $sku->id]);
         $this->delete('/api/skus/'.$sku->id);
@@ -288,28 +239,14 @@ class SkuTest extends TestCase
         $product = (new CreatePrductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
-        $sku = Sku::create(
-            [
-                'price' => 15.5,
-                'count' => 4,
-                'product_id' => $product->id,
-                'option_id' => [
-                    $option->id,
-                ],
-            ]
+        $sku = (new CreateSkuAction)(
+            (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
-        DB::table('option_sku')->insert(
-            [
-                ['sku_id'=>$sku->id, 'option_id'=>$option->id],
-            ]
-        );
+        (new CreateTestSkuOptionRelationAction)($sku->id, $option->id);
 
         Storage::fake('public');
         $file = UploadedFile::fake()->image('test.jpg');
-        $image = Image::create([
-            'sku_id' => $sku->id,
-            'file' => $file->hashName()
-        ]);
+        $image = (new CreateImageAction)((new GetTestImageAction)($sku->id, $file));
         
         $this->assertDatabaseHas('skus', ['id' => $sku->id]);
         $this->assertDatabaseHas('images', ['id' => $image->id]);
@@ -337,45 +274,26 @@ class SkuTest extends TestCase
         $oldFile = UploadedFile::fake()->image('test.jpg');
         $newFile = UploadedFile::fake()->image('test.jpg');
         
-        $oldSku = [
-            'price' => 15.5,
-            'count' => 4,
-            'product_id' => $product->id,
-            'option_id' => [
-                $option->id,
-            ],
-            'img' => [
-                $oldFile
-            ],
-        ];
+        $oldSku = (new GetTestSkuWithImageAction)($product->id, $option->id, $oldFile);
         $this->post('/api/skus', $oldSku);
 
-        $response = $this->get('/api/skus');
-
-        $insertedSkuId = $response->original[0]->id;
+        $insertedSkuId = (new GetTestInsertedSkuIDAction)($this->get('/api/skus'));
         
-        $this->assertDatabaseHas('skus', ['price' => $oldSku['price']]);
-        $this->assertDatabaseHas('skus', ['count' => $oldSku['count']]);
+        unset($oldSku['option_id']);
+        unset($oldSku['img']);
+
+        $this->assertDatabaseHas('skus', $oldSku);
         Storage::disk('public')->assertExists('uploads/'.$oldFile->hashName());
         Storage::disk('public')->assertMissing('uploads/'.$newFile->hashName());
 
-        $newSku = [
-            'price' => 1.5,
-            'count' => 45,
-            'product_id' => $product->id,
-            'option_id' => [
-                $option->id,
-            ],
-            'img' => [
-                $newFile
-            ],
-        ];
+        $newSku = (new GetTestSkuWithImageAction)($product->id, $option->id, $newFile);
         $this->put('/api/skus/'.$insertedSkuId, $newSku);
 
-        $this->assertDatabaseMissing('skus', ['price' => $oldSku['price']]);
-        $this->assertDatabaseMissing('skus', ['count' => $oldSku['count']]);
-        $this->assertDatabaseHas('skus', ['price' => $newSku['price']]);
-        $this->assertDatabaseHas('skus', ['count' => $newSku['count']]);
+        unset($newSku['option_id']);
+        unset($newSku['img']);
+
+        $this->assertDatabaseMissing('skus', $oldSku);
+        $this->assertDatabaseHas('skus', $newSku);
         Storage::disk('public')->assertExists('uploads/'.$oldFile->hashName());
         Storage::disk('public')->assertExists('uploads/'.$newFile->hashName());
     }
@@ -399,45 +317,26 @@ class SkuTest extends TestCase
         $oldFile = UploadedFile::fake()->image('test.jpg');
         $newFile = UploadedFile::fake()->image('test.jpg');
         
-        $oldSku = [
-            'price' => 15.5,
-            'count' => 4,
-            'product_id' => $product->id,
-            'option_id' => [
-                $option->id,
-            ],
-            'img' => [
-                $oldFile
-            ],
-        ];
+        $oldSku = (new GetTestSkuWithImageAction)($product->id, $option->id, $oldFile);
         $this->post('/api/skus', $oldSku);
 
-        $response = $this->get('/api/skus');
-
-        $insertedSkuId = $response->original[0]->id;
+        $insertedSkuId = (new GetTestInsertedSkuIDAction)($this->get('/api/skus'));
         
-        $this->assertDatabaseHas('skus', ['price' => $oldSku['price']]);
-        $this->assertDatabaseHas('skus', ['count' => $oldSku['count']]);
+        unset($oldSku['option_id']);
+        unset($oldSku['img']);
+
+        $this->assertDatabaseHas('skus', $oldSku);
         Storage::disk('public')->assertExists('uploads/'.$oldFile->hashName());
         Storage::disk('public')->assertMissing('uploads/'.$newFile->hashName());
 
-        $newSku = [
-            'price' => 1.5,
-            'count' => 45,
-            'product_id' => $product->id,
-            'option_id' => [
-                $option->id,
-            ],
-            'img' => [
-                $newFile
-            ],
-        ];
+        $newSku = (new GetTestSkuWithImageAction)($product->id, $option->id, $newFile);
         $this->patch('/api/skus/'.$insertedSkuId, $newSku);
 
-        $this->assertDatabaseMissing('skus', ['price' => $oldSku['price']]);
-        $this->assertDatabaseMissing('skus', ['count' => $oldSku['count']]);
-        $this->assertDatabaseHas('skus', ['price' => $newSku['price']]);
-        $this->assertDatabaseHas('skus', ['count' => $newSku['count']]);
+        unset($newSku['option_id']);
+        unset($newSku['img']);
+
+        $this->assertDatabaseMissing('skus', $oldSku);
+        $this->assertDatabaseHas('skus', $newSku);
         Storage::disk('public')->assertExists('uploads/'.$oldFile->hashName());
         Storage::disk('public')->assertExists('uploads/'.$newFile->hashName());
     }
