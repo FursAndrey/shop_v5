@@ -5,13 +5,13 @@ namespace Tests\Feature;
 use App\Actions\CreateCategoryAction;
 use App\Actions\CreatePrductAction;
 use App\Actions\CreatePropertyAction;
+use App\Actions\TestingActions\CreateTestProductPropertyRelationAction;
 use App\Actions\TestingActions\GetTestCategoryAction;
 use App\Actions\TestingActions\GetTestProductAction;
 use App\Actions\TestingActions\GetTestPropertyAction;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
@@ -43,11 +43,7 @@ class ProductTest extends TestCase
         $product = (new CreatePrductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
-        DB::table('product_property')->insert(
-            [
-                ['property_id'=>$property->id, 'product_id'=>$product->id],
-            ]
-        );
+        (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
 
         $response = $this->get('/api/products');
         
@@ -141,11 +137,7 @@ class ProductTest extends TestCase
         $product = (new CreatePrductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
-        DB::table('product_property')->insert(
-            [
-                ['property_id'=>$property->id, 'product_id'=>$product->id],
-            ]
-        );
+        (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
         
         $this->assertDatabaseHas('products', ['id' => $product->id]);
         $this->delete('/api/products/'.$product->id);
@@ -164,11 +156,7 @@ class ProductTest extends TestCase
         $oldProduct = (new GetTestProductAction)($property->id, $category->id);
         $product = (new CreatePrductAction)($oldProduct);
         
-        DB::table('product_property')->insert(
-            [
-                ['property_id'=>$property->id, 'product_id'=>$product->id],
-            ]
-        );
+        (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
 
         $this->assertDatabaseHas('products', ['name' => $oldProduct['name']]);
 
