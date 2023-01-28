@@ -3,11 +3,12 @@
 namespace Tests\Feature;
 
 use App\Actions\CreateCategoryAction;
+use App\Actions\CreateOptionAction;
 use App\Actions\CreatePropertyAction;
 use App\Actions\TestingActions\GetTestCategoryAction;
+use App\Actions\TestingActions\GetTestOptionAction;
 use App\Actions\TestingActions\GetTestPropertyAction;
 use App\Models\Image;
-use App\Models\Option;
 use App\Models\Product;
 use App\Models\Sku;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -40,11 +41,8 @@ class SkuTest extends TestCase
         $property = (new CreatePropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -103,11 +101,8 @@ class SkuTest extends TestCase
         $property = (new CreatePropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -143,11 +138,8 @@ class SkuTest extends TestCase
         $property = (new CreatePropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -183,11 +175,8 @@ class SkuTest extends TestCase
         $property = (new CreatePropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -233,11 +222,8 @@ class SkuTest extends TestCase
         $property = (new CreatePropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -291,11 +277,8 @@ class SkuTest extends TestCase
         $property = (new CreatePropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -336,11 +319,8 @@ class SkuTest extends TestCase
         $property = (new CreatePropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -390,11 +370,8 @@ class SkuTest extends TestCase
         $property = (new CreatePropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
@@ -462,11 +439,8 @@ class SkuTest extends TestCase
         $property = (new CreatePropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()

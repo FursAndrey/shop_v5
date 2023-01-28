@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\Option;
-use App\Models\Property;
+use App\Actions\CreateOptionAction;
+use App\Actions\CreatePropertyAction;
+use App\Actions\TestingActions\GetTestOptionAction;
+use App\Actions\TestingActions\GetTestPropertyAction;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -28,16 +31,11 @@ class OptionTest extends TestCase
 
     public function test_index_page_json_with_data()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
 
         $response = $this->get('/api/options');
@@ -56,16 +54,11 @@ class OptionTest extends TestCase
     
     public function test_show_page_status_200()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
 
         $response = $this->get('/api/options/'.$option->id);
@@ -75,16 +68,11 @@ class OptionTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
 
         $response = $this->get('/api/options/'.$option->id);
@@ -94,18 +82,13 @@ class OptionTest extends TestCase
 
     public function test_store()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
 
-        $option = [
-            'name' => 'opti',
-            'property_id' => $property->id,
-        ];
+        $option = (new GetTestOptionAction)($property->id);
         $this->assertDatabaseCount('options', 0);
-        $response = $this->post('/api/options', $option);
+        $this->post('/api/options', $option);
 
         $this->assertDatabaseCount('options', 1);
         $this->assertDatabaseHas('options', $option);
@@ -113,16 +96,11 @@ class OptionTest extends TestCase
 
     public function test_destroy()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
-        $option = Option::create(
-            [
-                'name' => 'opti',
-                'property_id' => $property->id,
-            ]
+        $option = (new CreateOptionAction)(
+            (new GetTestOptionAction)($property->id)
         );
         
         $this->assertDatabaseHas('options', ['id' => $option->id]);
@@ -132,23 +110,15 @@ class OptionTest extends TestCase
 
     public function test_update()
     {
-        $property = Property::create(
-            [
-                'name' => 'prop',
-            ]
+        $property = (new CreatePropertyAction)(
+            (new GetTestPropertyAction)()
         );
 
-        $oldOption = [
-            'name' => 'opti',
-            'property_id' => $property->id,
-        ];
-        $option = Option::create($oldOption);
-        $this->assertDatabaseHas('options', ['name' => $oldOption['name']]);
+        $oldOption = (new GetTestOptionAction)($property->id);
+        $option = (new CreateOptionAction)($oldOption);
+        $this->assertDatabaseHas('options', $oldOption);
 
-        $newOption = [
-            'name' => 'new opti',
-            'property_id' => $property->id,
-        ];
+        $newOption = (new GetTestOptionAction)($property->id);
         $this->put('/api/options/'.$option->id, $newOption);
         
         $this->assertDatabaseMissing('options', $oldOption);
