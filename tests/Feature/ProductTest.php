@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Actions\CreateCategoryAction;
+use App\Actions\CreatePrductAction;
 use App\Actions\CreatePropertyAction;
 use App\Actions\TestingActions\GetTestCategoryAction;
+use App\Actions\TestingActions\GetTestProductAction;
 use App\Actions\TestingActions\GetTestPropertyAction;
-use App\Models\Product;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
@@ -38,15 +40,8 @@ class ProductTest extends TestCase
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        $product = Product::create(
-            [
-                'name' => 'prod',
-                'description' => 'description',
-                'category_id' => $category->id,
-                'property_id' => [
-                    $property->id,
-                ],
-            ]
+        $product = (new CreatePrductAction)(
+            (new GetTestProductAction)($property->id, $category->id)
         );
         DB::table('product_property')->insert(
             [
@@ -83,15 +78,8 @@ class ProductTest extends TestCase
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        $product = Product::create(
-            [
-                'name' => 'prod',
-                'description' => 'description',
-                'category_id' => $category->id,
-                'property_id' => [
-                    $property->id,
-                ],
-            ]
+        $product = (new CreatePrductAction)(
+            (new GetTestProductAction)($property->id, $category->id)
         );
 
         $response = $this->get('/api/products/'.$product->id);
@@ -107,15 +95,8 @@ class ProductTest extends TestCase
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        $product = Product::create(
-            [
-                'name' => 'prod',
-                'description' => 'description',
-                'category_id' => $category->id,
-                'property_id' => [
-                    $property->id,
-                ],
-            ]
+        $product = (new CreatePrductAction)(
+            (new GetTestProductAction)($property->id, $category->id)
         );
 
         $response = $this->get('/api/products/'.$product->id);
@@ -131,18 +112,10 @@ class ProductTest extends TestCase
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        
-        $product = [
-            'name' => 'prod',
-            'description' => 'description',
-            'category_id' => $category->id,
-            'property_id' => [
-                $property->id,
-            ],
-        ];
+        $product = (new GetTestProductAction)($property->id, $category->id);
 
         $this->assertDatabaseCount('products', 0);
-        $response = $this->post('/api/products', $product);
+        $this->post('/api/products', $product);
 
         $this->assertDatabaseCount('products', 1);
 
@@ -165,15 +138,8 @@ class ProductTest extends TestCase
         $category = (new CreateCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        $product = Product::create(
-            [
-                'name' => 'prod',
-                'description' => 'description',
-                'category_id' => $category->id,
-                'property_id' => [
-                    $property->id,
-                ],
-            ]
+        $product = (new CreatePrductAction)(
+            (new GetTestProductAction)($property->id, $category->id)
         );
         DB::table('product_property')->insert(
             [
@@ -192,20 +158,11 @@ class ProductTest extends TestCase
             (new GetTestPropertyAction)()
         );
         $category = (new CreateCategoryAction)(
-            [
-                'name' => 'cat',
-            ]
+            (new GetTestCategoryAction)()
         );
         
-        $oldProduct = [
-            'name' => 'prod',
-            'description' => 'description',
-            'category_id' => $category->id,
-            'property_id' => [
-                $property->id,
-            ],
-        ];
-        $product = Product::create($oldProduct);
+        $oldProduct = (new GetTestProductAction)($property->id, $category->id);
+        $product = (new CreatePrductAction)($oldProduct);
         
         DB::table('product_property')->insert(
             [
@@ -215,14 +172,7 @@ class ProductTest extends TestCase
 
         $this->assertDatabaseHas('products', ['name' => $oldProduct['name']]);
 
-        $newProduct= [
-            'name' => 'new prod',
-            'description' => 'description',
-            'category_id' => $category->id,
-            'property_id' => [
-                $property->id,
-            ],
-        ];
+        $newProduct = (new GetTestProductAction)($property->id, $category->id);
         $this->put('/api/products/'.$product->id, $newProduct);
         
         unset($oldProduct['property_id']);
