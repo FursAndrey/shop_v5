@@ -2,10 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Actions\CreateOptionAction;
-use App\Actions\CreatePropertyAction;
-use App\Actions\TestingActions\GetTestOptionAction;
-use App\Actions\TestingActions\GetTestPropertyAction;
+use App\Actions\TestingActions\Create\CreateTestOptionAction;
+use App\Actions\TestingActions\Create\CreateTestPropertyAction;
+
+use App\Actions\TestingActions\Get\GetTestOptionAction;
+use App\Actions\TestingActions\Get\GetTestPropertyAction;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -31,15 +32,15 @@ class OptionTest extends TestCase
 
     public function test_index_page_json_with_data()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = (new CreateOptionAction)(
+        $option = (new CreateTestOptionAction)(
             (new GetTestOptionAction)($property->id)
         );
 
         $response = $this->get('/api/options');
-        
+
         $response->assertJsonFragment(
             [
                 'id' => $option->id,
@@ -51,13 +52,13 @@ class OptionTest extends TestCase
             ]
         );
     }
-    
+
     public function test_show_page_status_200()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = (new CreateOptionAction)(
+        $option = (new CreateTestOptionAction)(
             (new GetTestOptionAction)($property->id)
         );
 
@@ -68,10 +69,10 @@ class OptionTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = (new CreateOptionAction)(
+        $option = (new CreateTestOptionAction)(
             (new GetTestOptionAction)($property->id)
         );
 
@@ -82,7 +83,7 @@ class OptionTest extends TestCase
 
     public function test_store()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
 
@@ -96,13 +97,13 @@ class OptionTest extends TestCase
 
     public function test_destroy()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $option = (new CreateOptionAction)(
+        $option = (new CreateTestOptionAction)(
             (new GetTestOptionAction)($property->id)
         );
-        
+
         $this->assertDatabaseHas('options', ['id' => $option->id]);
         $this->delete('/api/options/'.$option->id);
         $this->assertDatabaseMissing('options', ['id' => $option->id]);
@@ -110,17 +111,17 @@ class OptionTest extends TestCase
 
     public function test_update()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
 
         $oldOption = (new GetTestOptionAction)($property->id);
-        $option = (new CreateOptionAction)($oldOption);
+        $option = (new CreateTestOptionAction)($oldOption);
         $this->assertDatabaseHas('options', $oldOption);
 
         $newOption = (new GetTestOptionAction)($property->id);
         $this->put('/api/options/'.$option->id, $newOption);
-        
+
         $this->assertDatabaseMissing('options', $oldOption);
         $this->assertDatabaseHas('options', $newOption);
     }

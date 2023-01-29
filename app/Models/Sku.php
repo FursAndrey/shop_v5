@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Sku extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'product_id',
         'price',

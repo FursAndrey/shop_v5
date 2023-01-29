@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\TestingActions\Create;
 
 use App\Models\Image;
 
-class CreateImageAction
+class CreateTestImageAction
 {
     public function __invoke(array $image): Image
     {

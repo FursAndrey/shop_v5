@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\TestingActions\Create;
 
 use App\Models\Property;
 
-class CreatePropertyAction
+class CreateTestPropertyAction
 {
     public function __invoke(array $property): Property
     {

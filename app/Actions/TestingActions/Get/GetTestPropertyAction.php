@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\TestingActions;
+namespace App\Actions\TestingActions\Get;
 
 class GetTestPropertyAction
 {

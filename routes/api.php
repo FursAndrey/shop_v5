@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CurrencyController;
+use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PropertyController;
@@ -30,4 +31,5 @@ Route::apiResource('products', ProductController::class);
 Route::apiResource('properties', PropertyController::class);
 Route::apiResource('options', OptionController::class);
 Route::apiResource('skus', SkuController::class);
-// Route::post('skus/{sku}', [SkuController::class, 'update'])->name('skus.update');
+Route::delete('/images/{image}', [ImageController::class, 'destroyOne']);
+Route::delete('/images/all/{sku}', [ImageController::class, 'destroyAll']);

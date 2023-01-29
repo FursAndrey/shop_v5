@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Actions\CreateCurrencyAction;
-use App\Actions\TestingActions\GetTestCurrencyAction;
+use App\Actions\TestingActions\Create\CreateTestCurrencyAction;
+use App\Actions\TestingActions\Get\GetTestCurrencyAction;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -26,15 +26,15 @@ class CurrencyTest extends TestCase
 
         $response->assertJsonPath('data', []);
     }
-    
+
     public function test_index_page_json_with_data()
     {
-        $currency = (new CreateCurrencyAction)(
+        $currency = (new CreateTestCurrencyAction)(
             (new GetTestCurrencyAction)()
         );
 
         $response = $this->get('/api/currencies');
-        
+
         $response->assertJsonFragment(
             [
                 'id' => $currency->id,
@@ -43,10 +43,10 @@ class CurrencyTest extends TestCase
             ]
         );
     }
-    
+
     public function test_show_page_status_200()
     {
-        $currency = (new CreateCurrencyAction)(
+        $currency = (new CreateTestCurrencyAction)(
             (new GetTestCurrencyAction)()
         );
 
@@ -57,7 +57,7 @@ class CurrencyTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $currency = (new CreateCurrencyAction)(
+        $currency = (new CreateTestCurrencyAction)(
             (new GetTestCurrencyAction)()
         );
 
@@ -78,10 +78,10 @@ class CurrencyTest extends TestCase
 
     public function test_destroy()
     {
-        $currency = (new CreateCurrencyAction)(
+        $currency = (new CreateTestCurrencyAction)(
             (new GetTestCurrencyAction)()
         );
-        
+
         $this->assertDatabaseHas('currencies', ['id' => $currency->id]);
         $this->delete('/api/currencies/'.$currency->id);
         $this->assertDatabaseMissing('currencies', ['id' => $currency->id]);
@@ -90,12 +90,12 @@ class CurrencyTest extends TestCase
     public function test_update()
     {
         $oldCurrency = (new GetTestCurrencyAction)();
-        $currency = (new CreateCurrencyAction)($oldCurrency);
+        $currency = (new CreateTestCurrencyAction)($oldCurrency);
         $this->assertDatabaseHas('currencies', $oldCurrency);
 
         $newCurrency = (new GetTestCurrencyAction)();
         $this->put('/api/currencies/'.$currency->id, $newCurrency);
-        
+
         $this->assertDatabaseMissing('currencies', $oldCurrency);
         $this->assertDatabaseHas('currencies', $newCurrency);
     }

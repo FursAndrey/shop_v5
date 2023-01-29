@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\TestingActions\Create;
 
 use App\Models\Sku;
 
-class CreateSkuAction
+class CreateTestSkuAction
 {
     public function __invoke(array $sku): Sku
     {

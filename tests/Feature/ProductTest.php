@@ -2,13 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\Actions\CreateCategoryAction;
-use App\Actions\CreatePrductAction;
-use App\Actions\CreatePropertyAction;
-use App\Actions\TestingActions\CreateTestProductPropertyRelationAction;
-use App\Actions\TestingActions\GetTestCategoryAction;
-use App\Actions\TestingActions\GetTestProductAction;
-use App\Actions\TestingActions\GetTestPropertyAction;
+use App\Actions\TestingActions\Create\CreateTestCategoryAction;
+use App\Actions\TestingActions\Create\CreateTestProductAction;
+use App\Actions\TestingActions\Create\CreateTestPropertyAction;
+use App\Actions\TestingActions\Create\CreateTestProductPropertyRelationAction;
+
+use App\Actions\TestingActions\Get\GetTestCategoryAction;
+use App\Actions\TestingActions\Get\GetTestProductAction;
+use App\Actions\TestingActions\Get\GetTestPropertyAction;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -34,19 +35,19 @@ class ProductTest extends TestCase
 
     public function test_index_page_json_with_data()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $category = (new CreateCategoryAction)(
+        $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        $product = (new CreatePrductAction)(
+        $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
         (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
 
         $response = $this->get('/api/products');
-        
+
         $response->assertJsonFragment(
             [
                 'id' => $product->id,
@@ -65,16 +66,16 @@ class ProductTest extends TestCase
             ]
         );
     }
-    
+
     public function test_show_page_status_200()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $category = (new CreateCategoryAction)(
+        $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        $product = (new CreatePrductAction)(
+        $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
 
@@ -85,13 +86,13 @@ class ProductTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $category = (new CreateCategoryAction)(
+        $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        $product = (new CreatePrductAction)(
+        $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
 
@@ -102,10 +103,10 @@ class ProductTest extends TestCase
 
     public function test_store()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $category = (new CreateCategoryAction)(
+        $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
         $product = (new GetTestProductAction)($property->id, $category->id);
@@ -119,7 +120,7 @@ class ProductTest extends TestCase
 
         $this->assertDatabaseHas('products', $product);
         $this->assertDatabaseHas(
-            'product_property', 
+            'product_property',
             [
                 'property_id' => $property->id,
             ]
@@ -128,17 +129,17 @@ class ProductTest extends TestCase
 
     public function test_destroy()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $category = (new CreateCategoryAction)(
+        $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        $product = (new CreatePrductAction)(
+        $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
         (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
-        
+
         $this->assertDatabaseHas('products', ['id' => $product->id]);
         $this->delete('/api/products/'.$product->id);
         $this->assertDatabaseMissing('products', ['id' => $product->id]);
@@ -146,30 +147,30 @@ class ProductTest extends TestCase
 
     public function test_update()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        $category = (new CreateCategoryAction)(
+        $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        
+
         $oldProduct = (new GetTestProductAction)($property->id, $category->id);
-        $product = (new CreatePrductAction)($oldProduct);
-        
+        $product = (new CreateTestProductAction)($oldProduct);
+
         (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
 
         $this->assertDatabaseHas('products', ['name' => $oldProduct['name']]);
 
         $newProduct = (new GetTestProductAction)($property->id, $category->id);
         $this->put('/api/products/'.$product->id, $newProduct);
-        
+
         unset($oldProduct['property_id']);
         unset($newProduct['property_id']);
 
         $this->assertDatabaseMissing('products', $oldProduct);
         $this->assertDatabaseHas('products', $newProduct);
         $this->assertDatabaseHas(
-            'product_property', 
+            'product_property',
             [
                 'product_id' => $product->id,
                 'property_id' => $property->id,

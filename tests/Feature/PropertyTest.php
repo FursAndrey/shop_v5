@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Actions\CreatePropertyAction;
-use App\Actions\TestingActions\GetTestPropertyAction;
+use App\Actions\TestingActions\Create\CreateTestPropertyAction;
+use App\Actions\TestingActions\Get\GetTestPropertyAction;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -29,12 +29,12 @@ class PropertyTest extends TestCase
 
     public function test_index_page_json_with_data()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
 
         $response = $this->get('/api/properties');
-        
+
         $response->assertJsonFragment(
             [
                 'id' => $property->id,
@@ -44,10 +44,10 @@ class PropertyTest extends TestCase
             ]
         );
     }
-    
+
     public function test_show_page_status_200()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
 
@@ -58,7 +58,7 @@ class PropertyTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
 
@@ -79,10 +79,10 @@ class PropertyTest extends TestCase
 
     public function test_destroy()
     {
-        $property = (new CreatePropertyAction)(
+        $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        
+
         $this->assertDatabaseHas('properties', ['id' => $property->id]);
         $this->delete('/api/properties/'.$property->id);
         $this->assertDatabaseMissing('properties', ['id' => $property->id]);
@@ -91,12 +91,12 @@ class PropertyTest extends TestCase
     public function test_update()
     {
         $oldProperty = (new GetTestPropertyAction)();
-        $property = (new CreatePropertyAction)($oldProperty);
+        $property = (new CreateTestPropertyAction)($oldProperty);
         $this->assertDatabaseHas('properties', $oldProperty);
 
         $newProperty = (new GetTestPropertyAction)();
         $this->put('/api/properties/'.$property->id, $newProperty);
-        
+
         $this->assertDatabaseMissing('properties', $oldProperty);
         $this->assertDatabaseHas('properties', $newProperty);
     }
