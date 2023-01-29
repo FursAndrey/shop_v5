@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\TestingActions\Create;
 
 use App\Models\Category;
 
-class CreateCategoryAction
+class CreateTestCategoryAction
 {
     public function __invoke(array $category): Category
     {

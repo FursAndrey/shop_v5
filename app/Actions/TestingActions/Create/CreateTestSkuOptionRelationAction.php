@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\TestingActions;
+namespace App\Actions\TestingActions\Create;
 
 use Illuminate\Support\Facades\DB;
 

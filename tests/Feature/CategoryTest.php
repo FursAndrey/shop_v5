@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Actions\CreateCategoryAction;
-use App\Actions\TestingActions\GetTestCategoryAction;
+use App\Actions\TestingActions\Create\CreateTestCategoryAction;
+use App\Actions\TestingActions\Get\GetTestCategoryAction;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -29,7 +29,7 @@ class CategoryTest extends TestCase
 
     public function test_index_page_json_with_data()
     {
-        $category = (new CreateCategoryAction)(
+        $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
 
@@ -46,7 +46,7 @@ class CategoryTest extends TestCase
     
     public function test_show_page_status_200()
     {
-        $category = (new CreateCategoryAction)(
+        $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
 
@@ -57,7 +57,7 @@ class CategoryTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $category = (new CreateCategoryAction)(
+        $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
 
@@ -78,7 +78,7 @@ class CategoryTest extends TestCase
 
     public function test_destroy()
     {
-        $category = (new CreateCategoryAction)(
+        $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
         
@@ -90,7 +90,7 @@ class CategoryTest extends TestCase
     public function test_update()
     {
         $oldCategory = (new GetTestCategoryAction)();
-        $category = (new CreateCategoryAction)($oldCategory);
+        $category = (new CreateTestCategoryAction)($oldCategory);
         $this->assertDatabaseHas('categories', $oldCategory);
 
         $newCategory = (new GetTestCategoryAction)();

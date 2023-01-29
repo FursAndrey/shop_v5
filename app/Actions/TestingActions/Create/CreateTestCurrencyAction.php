@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\TestingActions\Create;
 
 use App\Models\Currency;
 
-class CreateCurrencyAction
+class CreateTestCurrencyAction
 {
     public function __invoke(array $currency): Currency
     {

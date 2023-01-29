@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\TestingActions\Create;
 
 use App\Models\Product;
 
-class CreatePrductAction
+class CreateTestProductAction
 {
     public function __invoke(array $product): Product
     {

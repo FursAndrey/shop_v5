@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\TestingActions\Create;
 
 use App\Models\Option;
 
-class CreateOptionAction
+class CreateTestOptionAction
 {
     public function __invoke(array $option): Option
     {
