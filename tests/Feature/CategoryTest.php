@@ -34,7 +34,7 @@ class CategoryTest extends TestCase
         );
 
         $response = $this->get('/api/categories');
-        
+
         $response->assertJsonFragment(
             [
                 'id' => $category->id,
@@ -43,7 +43,7 @@ class CategoryTest extends TestCase
             ]
         );
     }
-    
+
     public function test_show_page_status_200()
     {
         $category = (new CreateTestCategoryAction)(
@@ -81,7 +81,7 @@ class CategoryTest extends TestCase
         $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        
+
         $this->assertDatabaseHas('categories', ['id' => $category->id]);
         $this->delete('/api/categories/'.$category->id);
         $this->assertDatabaseMissing('categories', ['id' => $category->id]);
@@ -95,7 +95,7 @@ class CategoryTest extends TestCase
 
         $newCategory = (new GetTestCategoryAction)();
         $this->put('/api/categories/'.$category->id, $newCategory);
-        
+
         $this->assertDatabaseMissing('categories', $oldCategory);
         $this->assertDatabaseHas('categories', $newCategory);
     }

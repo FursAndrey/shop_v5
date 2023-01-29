@@ -47,7 +47,7 @@ class ProductTest extends TestCase
         (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
 
         $response = $this->get('/api/products');
-        
+
         $response->assertJsonFragment(
             [
                 'id' => $product->id,
@@ -66,7 +66,7 @@ class ProductTest extends TestCase
             ]
         );
     }
-    
+
     public function test_show_page_status_200()
     {
         $property = (new CreateTestPropertyAction)(
@@ -120,7 +120,7 @@ class ProductTest extends TestCase
 
         $this->assertDatabaseHas('products', $product);
         $this->assertDatabaseHas(
-            'product_property', 
+            'product_property',
             [
                 'property_id' => $property->id,
             ]
@@ -139,7 +139,7 @@ class ProductTest extends TestCase
             (new GetTestProductAction)($property->id, $category->id)
         );
         (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
-        
+
         $this->assertDatabaseHas('products', ['id' => $product->id]);
         $this->delete('/api/products/'.$product->id);
         $this->assertDatabaseMissing('products', ['id' => $product->id]);
@@ -153,24 +153,24 @@ class ProductTest extends TestCase
         $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
-        
+
         $oldProduct = (new GetTestProductAction)($property->id, $category->id);
         $product = (new CreateTestProductAction)($oldProduct);
-        
+
         (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
 
         $this->assertDatabaseHas('products', ['name' => $oldProduct['name']]);
 
         $newProduct = (new GetTestProductAction)($property->id, $category->id);
         $this->put('/api/products/'.$product->id, $newProduct);
-        
+
         unset($oldProduct['property_id']);
         unset($newProduct['property_id']);
 
         $this->assertDatabaseMissing('products', $oldProduct);
         $this->assertDatabaseHas('products', $newProduct);
         $this->assertDatabaseHas(
-            'product_property', 
+            'product_property',
             [
                 'product_id' => $product->id,
                 'property_id' => $property->id,

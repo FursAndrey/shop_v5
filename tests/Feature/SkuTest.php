@@ -63,7 +63,7 @@ class SkuTest extends TestCase
         (new CreateTestSkuOptionRelationAction)($sku->id, $option->id);
 
         $response = $this->get('/api/skus');
-        
+
         $response->assertJsonFragment(
             [
                 'id' => $sku->id,
@@ -145,7 +145,7 @@ class SkuTest extends TestCase
         $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
-        
+
         $sku = (new GetTestSkuWithoutImageAction)($product->id, $option->id);
 
         $this->assertDatabaseCount('skus', 0);
@@ -157,7 +157,7 @@ class SkuTest extends TestCase
 
         $this->assertDatabaseHas('skus', $sku);
         $this->assertDatabaseHas(
-            'option_sku', 
+            'option_sku',
             [
                 'option_id' => $option->id,
             ]
@@ -180,9 +180,9 @@ class SkuTest extends TestCase
         );
         Storage::fake('public');
         $file = UploadedFile::fake()->image('test.jpg');
-        
+
         $sku = (new GetTestSkuWithImageAction)($product->id, $option->id, $file);
-        
+
         $this->assertDatabaseCount('skus', 0);
         Storage::disk('public')->assertMissing('uploads/'.$file->hashName());
         $this->post('/api/skus', $sku);
@@ -194,7 +194,7 @@ class SkuTest extends TestCase
 
         $this->assertDatabaseHas('skus', $sku);
         $this->assertDatabaseHas(
-            'option_sku', 
+            'option_sku',
             [
                 'option_id' => $option->id,
             ]
@@ -220,12 +220,12 @@ class SkuTest extends TestCase
             (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
         (new CreateTestSkuOptionRelationAction)($sku->id, $option->id);
-        
+
         $this->assertDatabaseHas('skus', ['id' => $sku->id]);
         $this->delete('/api/skus/'.$sku->id);
         $this->assertDatabaseMissing('skus', ['id' => $sku->id]);
     }
-    
+
     public function test_destroy_with_images()
     {
         $property = (new CreateTestPropertyAction)(
@@ -247,8 +247,8 @@ class SkuTest extends TestCase
 
         Storage::fake('public');
         $file = UploadedFile::fake()->image('test.jpg');
-        $image = (new CreateTestImageAction)((new GetTestImageAction)($sku->id, $file));
-        
+        $image = (new CreateTestImageAction)((new GetTestImageAction)($sku->id, $file->hashName()));
+
         $this->assertDatabaseHas('skus', ['id' => $sku->id]);
         $this->assertDatabaseHas('images', ['id' => $image->id]);
         $this->delete('/api/skus/'.$sku->id);
@@ -270,16 +270,16 @@ class SkuTest extends TestCase
         $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
-        
+
         Storage::fake('public');
         $oldFile = UploadedFile::fake()->image('test.jpg');
         $newFile = UploadedFile::fake()->image('test.jpg');
-        
+
         $oldSku = (new GetTestSkuWithImageAction)($product->id, $option->id, $oldFile);
         $this->post('/api/skus', $oldSku);
 
         $insertedSkuId = (new GetTestInsertedSkuIDAction)($this->get('/api/skus'));
-        
+
         unset($oldSku['option_id']);
         unset($oldSku['img']);
 
@@ -313,16 +313,16 @@ class SkuTest extends TestCase
         $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
-        
+
         Storage::fake('public');
         $oldFile = UploadedFile::fake()->image('test.jpg');
         $newFile = UploadedFile::fake()->image('test.jpg');
-        
+
         $oldSku = (new GetTestSkuWithImageAction)($product->id, $option->id, $oldFile);
         $this->post('/api/skus', $oldSku);
 
         $insertedSkuId = (new GetTestInsertedSkuIDAction)($this->get('/api/skus'));
-        
+
         unset($oldSku['option_id']);
         unset($oldSku['img']);
 

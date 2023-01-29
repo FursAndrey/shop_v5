@@ -31,7 +31,7 @@ class SkuController extends Controller
     {
         $sku = Sku::create($request->validated());
         $sku->options()->sync($request->option_id);
-        
+
         if (!is_null($request->img)) {
             foreach ($request->img as $image) {
                 $fileName = $image->store('uploads', 'public');

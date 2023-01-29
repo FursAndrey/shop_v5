@@ -34,7 +34,7 @@ class PropertyTest extends TestCase
         );
 
         $response = $this->get('/api/properties');
-        
+
         $response->assertJsonFragment(
             [
                 'id' => $property->id,
@@ -44,7 +44,7 @@ class PropertyTest extends TestCase
             ]
         );
     }
-    
+
     public function test_show_page_status_200()
     {
         $property = (new CreateTestPropertyAction)(
@@ -82,7 +82,7 @@ class PropertyTest extends TestCase
         $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
-        
+
         $this->assertDatabaseHas('properties', ['id' => $property->id]);
         $this->delete('/api/properties/'.$property->id);
         $this->assertDatabaseMissing('properties', ['id' => $property->id]);
@@ -96,7 +96,7 @@ class PropertyTest extends TestCase
 
         $newProperty = (new GetTestPropertyAction)();
         $this->put('/api/properties/'.$property->id, $newProperty);
-        
+
         $this->assertDatabaseMissing('properties', $oldProperty);
         $this->assertDatabaseHas('properties', $newProperty);
     }

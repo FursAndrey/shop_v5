@@ -40,7 +40,7 @@ class OptionTest extends TestCase
         );
 
         $response = $this->get('/api/options');
-        
+
         $response->assertJsonFragment(
             [
                 'id' => $option->id,
@@ -52,7 +52,7 @@ class OptionTest extends TestCase
             ]
         );
     }
-    
+
     public function test_show_page_status_200()
     {
         $property = (new CreateTestPropertyAction)(
@@ -103,7 +103,7 @@ class OptionTest extends TestCase
         $option = (new CreateTestOptionAction)(
             (new GetTestOptionAction)($property->id)
         );
-        
+
         $this->assertDatabaseHas('options', ['id' => $option->id]);
         $this->delete('/api/options/'.$option->id);
         $this->assertDatabaseMissing('options', ['id' => $option->id]);
@@ -121,7 +121,7 @@ class OptionTest extends TestCase
 
         $newOption = (new GetTestOptionAction)($property->id);
         $this->put('/api/options/'.$option->id, $newOption);
-        
+
         $this->assertDatabaseMissing('options', $oldOption);
         $this->assertDatabaseHas('options', $newOption);
     }
