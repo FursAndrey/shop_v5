@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\DeleteImagesAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SkuRequest;
 use App\Http\Resources\SkuCollection;
@@ -90,14 +91,7 @@ class SkuController extends Controller
     {
         $sku->options()->detach();
 
-        if (!is_null($sku->images)) {
-            foreach ($sku->images as $image) {
-                if (file_exists($image->file_for_delete)) {
-                    unlink($image->file_for_delete);
-                }
-                $image->delete();
-            }
-        }
+        DeleteImagesAction::all($sku);
 
         $sku->delete();
 
