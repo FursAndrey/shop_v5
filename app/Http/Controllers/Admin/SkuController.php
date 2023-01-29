@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\CreateImageAction;
-use App\Actions\CreateSkuAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SkuRequest;
 use App\Http\Resources\SkuCollection;
@@ -31,7 +30,7 @@ class SkuController extends Controller
      */
     public function store(SkuRequest $request)
     {
-        $sku = (new CreateSkuAction)($request->validated());
+        $sku = Sku::create($request->validated());
         $sku->options()->sync($request->option_id);
         
         if (!is_null($request->img)) {
