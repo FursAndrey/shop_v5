@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\ImageActions\DeleteImagesAction;
+use App\Actions\ImageActions\SaveImagesAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SkuRequest;
 use App\Http\Resources\SkuCollection;
@@ -34,11 +35,12 @@ class SkuController extends Controller
         $sku->options()->sync($request->option_id);
 
         if (!is_null($request->img)) {
-            foreach ($request->img as $image) {
-                $fileName = $image->store('uploads', 'public');
+//переделать на генератор
+            $images = SaveImagesAction::all($request->img);
+            foreach ($images as $image) {
                 Image::create([
                     'sku_id' => $sku->id,
-                    'file' => $fileName
+                    'file' => $image
                 ]);
             }
         }
@@ -70,11 +72,12 @@ class SkuController extends Controller
         $sku->options()->sync($request->option_id);
 
         if (!is_null($request->img)) {
-            foreach ($request->img as $image) {
-                $fileName = $image->store('uploads', 'public');
+//переделать на генератор
+            $images = SaveImagesAction::all($request->img);
+            foreach ($images as $image) {
                 Image::create([
                     'sku_id' => $sku->id,
-                    'file' => $fileName
+                    'file' => $image
                 ]);
             }
         }
