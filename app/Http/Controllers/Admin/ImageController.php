@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Actions\DeleteImagesAction;
+use App\Actions\ImageActions\DeleteImagesAction;
 use App\Http\Controllers\Controller;
 use App\Models\Image;
 use App\Models\Sku;
