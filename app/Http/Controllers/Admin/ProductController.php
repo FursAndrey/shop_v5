@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\ProductActions\DeleteProductAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductCollection;
@@ -69,8 +70,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->properties()->detach();
-        $product->delete();
+        (new DeleteProductAction)($product);
 
         return response()->noContent();
     }

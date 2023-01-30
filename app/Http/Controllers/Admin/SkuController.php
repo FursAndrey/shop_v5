@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Actions\DeleteImagesAction;
+use App\Actions\SkuActions\DeleteSkuAction;
+use App\Actions\SkuActions\SaveSkuAttributesAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SkuRequest;
 use App\Http\Resources\SkuCollection;
 use App\Http\Resources\SkuResource;
-use App\Models\Image;
 use App\Models\Sku;
 
 class SkuController extends Controller
@@ -31,17 +31,8 @@ class SkuController extends Controller
     public function store(SkuRequest $request)
     {
         $sku = Sku::create($request->validated());
-        $sku->options()->sync($request->option_id);
+        (new SaveSkuAttributesAction)($request, $sku);
 
-        if (!is_null($request->img)) {
-            foreach ($request->img as $image) {
-                $fileName = $image->store('uploads', 'public');
-                Image::create([
-                    'sku_id' => $sku->id,
-                    'file' => $fileName
-                ]);
-            }
-        }
         return new SkuResource($sku);
     }
 
@@ -67,17 +58,8 @@ class SkuController extends Controller
     public function update(SkuRequest $request, Sku $sku)
     {
         $sku->update($request->validated());
-        $sku->options()->sync($request->option_id);
-
-        if (!is_null($request->img)) {
-            foreach ($request->img as $image) {
-                $fileName = $image->store('uploads', 'public');
-                Image::create([
-                    'sku_id' => $sku->id,
-                    'file' => $fileName
-                ]);
-            }
-        }
+        (new SaveSkuAttributesAction)($request, $sku);
+        
         return new SkuResource($sku);
     }
 
@@ -89,11 +71,7 @@ class SkuController extends Controller
      */
     public function destroy(Sku $sku)
     {
-        $sku->options()->detach();
-
-        DeleteImagesAction::all($sku);
-
-        $sku->delete();
+        (new DeleteSkuAction)($sku);
 
         return response()->noContent();
     }
