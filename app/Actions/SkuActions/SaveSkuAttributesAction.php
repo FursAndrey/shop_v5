@@ -14,9 +14,7 @@ class SaveSkuAttributesAction
         $sku->options()->sync($request->option_id);
 
         if (!is_null($request->img)) {
-//переделать на генератор
-            $images = SaveImagesAction::all($request->img);
-            foreach ($images as $image) {
+            foreach (SaveImagesAction::all($request->img) as $image) {
                 Image::create([
                     'sku_id' => $sku->id,
                     'file' => $image
