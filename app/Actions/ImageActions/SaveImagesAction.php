@@ -2,6 +2,7 @@
 
 namespace App\Actions\ImageActions;
 
+use Generator;
 use Illuminate\Http\UploadedFile;
 
 class SaveImagesAction
@@ -11,14 +12,12 @@ class SaveImagesAction
         return $image->store('uploads', 'public');
     }
     
-    public static function all(array $files): array
+    public static function all(array $files): Generator
     {
-        $fileNames = [];
         if (!is_null($files)) {
             foreach ($files as $image) {
-                $fileNames[] = self::one($image);
+                yield self::one($image);
             }
         }
-        return $fileNames;
     }
 }
