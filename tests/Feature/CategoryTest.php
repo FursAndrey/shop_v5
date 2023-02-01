@@ -3,8 +3,11 @@
 namespace Tests\Feature;
 
 use App\Actions\TestingActions\Create\CreateTestCategoryAction;
+use App\Actions\TestingActions\Create\CreateTestProductAction;
+use App\Actions\TestingActions\Create\CreateTestPropertyAction;
 use App\Actions\TestingActions\Get\GetTestCategoryAction;
-
+use App\Actions\TestingActions\Get\GetTestProductAction;
+use App\Actions\TestingActions\Get\GetTestPropertyAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -76,7 +79,7 @@ class CategoryTest extends TestCase
         $this->assertDatabaseHas('categories', $category);
     }
 
-    public function test_destroy()
+    public function test_destroy_without_product()
     {
         $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
@@ -85,6 +88,26 @@ class CategoryTest extends TestCase
         $this->assertDatabaseHas('categories', ['id' => $category->id]);
         $this->delete('/api/categories/'.$category->id);
         $this->assertDatabaseMissing('categories', ['id' => $category->id]);
+    }
+
+    public function test_destroy_with_product()
+    {
+        $category = (new CreateTestCategoryAction)(
+            (new GetTestCategoryAction)()
+        );
+
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        
+        $product = (new CreateTestProductAction)(
+            (new GetTestProductAction)($property->id, $category->id)
+        );
+        
+        $this->assertDatabaseHas('categories', ['id' => $category->id]);
+        $response = $this->delete('/api/categories/'.$category->id);
+        $response->assertStatus(409);
+        $this->assertDatabaseHas('categories', ['id' => $category->id]);
     }
 
     public function test_update()
