@@ -20,6 +20,11 @@ class CategoryController extends Controller
         return new CategoryCollection(Category::with('products')->paginate(5));
     }
 
+    public function categoryAll()
+    {
+        return new CategoryCollection(Category::get());
+    }
+
     /**
      * Store a newly created resource in storage.
      *

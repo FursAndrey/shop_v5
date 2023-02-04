@@ -30,6 +30,31 @@ class CategoryTest extends TestCase
         $response->assertJsonPath('data', []);
     }
 
+    public function test_index1_page_json_with_data()
+    {
+        $category1 = (new CreateTestCategoryAction)(
+            (new GetTestCategoryAction)()
+        );
+        $category2 = (new CreateTestCategoryAction)(
+            (new GetTestCategoryAction)()
+        );
+
+        $response = $this->get('/api/category/all');
+
+        $response->assertExactJson(
+            [
+                [
+                    'id' => $category1->id,
+                    'name' => $category1->name,
+                ],
+                [
+                    'id' => $category2->id,
+                    'name' => $category2->name,
+                ]
+            ]
+        );
+    }
+
     public function test_index_page_json_with_data()
     {
         $category = (new CreateTestCategoryAction)(
