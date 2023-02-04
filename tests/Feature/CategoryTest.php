@@ -30,7 +30,7 @@ class CategoryTest extends TestCase
         $response->assertJsonPath('data', []);
     }
 
-    public function test_index1_page_json_with_data()
+    public function test_category_all_page_json_with_data()
     {
         $category1 = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
