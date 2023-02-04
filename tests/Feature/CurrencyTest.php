@@ -44,6 +44,33 @@ class CurrencyTest extends TestCase
         );
     }
 
+    public function test_currency_all_page_json_with_data()
+    {
+        $currency1 = (new CreateTestCurrencyAction)(
+            (new GetTestCurrencyAction)()
+        );
+        $currency2 = (new CreateTestCurrencyAction)(
+            (new GetTestCurrencyAction)()
+        );
+
+        $response = $this->get('/api/currency/all');
+
+        $response->assertExactJson(
+            [
+                [
+                    'id' => $currency1->id,
+                    'code' => $currency1->code,
+                    'rate' => $currency1->rate,
+                ],
+                [
+                    'id' => $currency2->id,
+                    'code' => $currency2->code,
+                    'rate' => $currency2->rate,
+                ]
+            ]
+        );
+    }
+
     public function test_show_page_status_200()
     {
         $currency = (new CreateTestCurrencyAction)(

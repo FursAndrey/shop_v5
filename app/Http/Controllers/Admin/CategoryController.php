@@ -20,6 +20,11 @@ class CategoryController extends Controller
         return new CategoryCollection(Category::with('products')->paginate(5));
     }
 
+    public function categoryAll()
+    {
+        return new CategoryCollection(Category::get());
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -67,6 +72,11 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if (count($category->products) != 0) {
+            return response('Category '.$category->id.' has products', 409)
+                  ->header('Content-Type', 'text/plain');
+        }
+
         $category->delete();
 
         return response()->noContent();
