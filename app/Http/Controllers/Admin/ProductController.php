@@ -21,6 +21,11 @@ class ProductController extends Controller
         return new ProductCollection(Product::with(['category', 'properties'])->paginate(5));
     }
 
+    public function productAll()
+    {
+        return new ProductCollection(Product::get());
+    }
+
     /**
      * Store a newly created resource in storage.
      *

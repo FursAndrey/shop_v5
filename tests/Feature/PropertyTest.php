@@ -45,6 +45,31 @@ class PropertyTest extends TestCase
         );
     }
 
+    public function test_property_all_page_json_with_data()
+    {
+        $property1 = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $property2 = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+
+        $response = $this->get('/api/property/all');
+
+        $response->assertExactJson(
+            [
+                [
+                    'id' => $property1->id,
+                    'name' => $property1->name,
+                ],
+                [
+                    'id' => $property2->id,
+                    'name' => $property2->name,
+                ]
+            ]
+        );
+    }
+
     public function test_show_page_status_200()
     {
         $property = (new CreateTestPropertyAction)(
