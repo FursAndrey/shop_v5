@@ -67,6 +67,39 @@ class ProductTest extends TestCase
         );
     }
 
+    public function test_product_all_page_json_with_data()
+    {
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $category = (new CreateTestCategoryAction)(
+            (new GetTestCategoryAction)()
+        );
+        $product1 = (new CreateTestProductAction)(
+            (new GetTestProductAction)($property->id, $category->id)
+        );
+        $product2 = (new CreateTestProductAction)(
+            (new GetTestProductAction)($property->id, $category->id)
+        );
+
+        $response = $this->get('/api/product/all');
+
+        $response->assertExactJson(
+            [
+                [
+                    'id' => $product1->id,
+                    'name' => $product1->name,
+                    'description' => $product1->description,
+                ],
+                [
+                    'id' => $product2->id,
+                    'name' => $product2->name,
+                    'description' => $product2->description,
+                ]
+            ]
+        );
+    }
+
     public function test_show_page_status_200()
     {
         $property = (new CreateTestPropertyAction)(

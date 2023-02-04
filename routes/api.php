@@ -30,6 +30,7 @@ Route::get('/category/all', [CategoryController::class, 'categoryAll'])->name('c
 Route::apiResource('currencies', CurrencyController::class);
 Route::get('/currency/all', [CurrencyController::class, 'currencyAll'])->name('currencyAll');
 Route::apiResource('products', ProductController::class);
+Route::get('product/all', [ProductController::class, 'productAll'])->name('productAll');
 Route::apiResource('properties', PropertyController::class);
 Route::get('property/all', [PropertyController::class, 'propertyAll'])->name('propertyAll');
 Route::apiResource('options', OptionController::class);
