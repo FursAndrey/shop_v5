@@ -53,6 +53,34 @@ class OptionTest extends TestCase
         );
     }
 
+    public function test_option_all_page_json_with_data()
+    {
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $option1 = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
+        $option2 = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
+
+        $response = $this->get('/api/option/all');
+
+        $response->assertExactJson(
+            [
+                [
+                    'id' => $option1->id,
+                    'name' => $option1->name,
+                ],
+                [
+                    'id' => $option2->id,
+                    'name' => $option2->name,
+                ]
+            ]
+        );
+    }
+
     public function test_show_page_status_200()
     {
         $property = (new CreateTestPropertyAction)(

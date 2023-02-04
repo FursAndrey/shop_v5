@@ -32,6 +32,7 @@ Route::get('/currency/all', [CurrencyController::class, 'currencyAll'])->name('c
 Route::apiResource('products', ProductController::class);
 Route::apiResource('properties', PropertyController::class);
 Route::apiResource('options', OptionController::class);
+Route::get('option/all', [OptionController::class, 'optionAll'])->name('optionAll');
 Route::apiResource('skus', SkuController::class);
 Route::delete('/images/{image}', [ImageController::class, 'destroyOne']);
 Route::delete('/images/all/{sku}', [ImageController::class, 'destroyAll']);

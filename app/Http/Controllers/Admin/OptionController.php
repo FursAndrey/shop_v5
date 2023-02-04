@@ -20,6 +20,11 @@ class OptionController extends Controller
         return new OptionCollection(Option::with(['property'])->paginate(5));
     }
 
+    public function optionAll()
+    {
+        return new OptionCollection(Option::get());
+    }
+
     /**
      * Store a newly created resource in storage.
      *
