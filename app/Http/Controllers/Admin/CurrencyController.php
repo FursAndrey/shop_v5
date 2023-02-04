@@ -21,6 +21,11 @@ class CurrencyController extends Controller
         return new CurrencyCollection(Currency::paginate(5));
     }
 
+    public function currencyAll()
+    {
+        return new CurrencyCollection(Currency::get());
+    }
+
     /**
      * Store a newly created resource in storage.
      *
