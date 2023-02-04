@@ -20,6 +20,11 @@ class PropertyController extends Controller
         return new PropertyCollection(Property::with('products', 'options')->paginate(5));
     }
 
+    public function propertyAll()
+    {
+        return new PropertyCollection(Property::get());
+    }
+
     /**
      * Store a newly created resource in storage.
      *

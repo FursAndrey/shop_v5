@@ -31,6 +31,7 @@ Route::apiResource('currencies', CurrencyController::class);
 Route::get('/currency/all', [CurrencyController::class, 'currencyAll'])->name('currencyAll');
 Route::apiResource('products', ProductController::class);
 Route::apiResource('properties', PropertyController::class);
+Route::get('property/all', [PropertyController::class, 'propertyAll'])->name('propertyAll');
 Route::apiResource('options', OptionController::class);
 Route::get('option/all', [OptionController::class, 'optionAll'])->name('optionAll');
 Route::apiResource('skus', SkuController::class);
