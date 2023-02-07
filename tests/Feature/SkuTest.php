@@ -86,6 +86,10 @@ class SkuTest extends TestCase
                     [
                         'id' => $option->id,
                         'name' => $option->name,
+                        'property' => [
+                            'id' => $property->id,
+                            'name' => $property->name,
+                        ]
                     ]
                 ],
                 'images' => [],

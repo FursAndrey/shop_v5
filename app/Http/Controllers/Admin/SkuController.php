@@ -19,7 +19,7 @@ class SkuController extends Controller
      */
     public function index()
     {
-        return new SkuCollection(Sku::with(['product', 'product.properties', 'options', 'images'])->paginate(5));
+        return new SkuCollection(Sku::with(['product', 'product.properties', 'options', 'options.property', 'images'])->paginate(5));
     }
 
     /**
@@ -44,7 +44,7 @@ class SkuController extends Controller
      */
     public function show(Sku $sku)
     {
-        $sku = Sku::with(['product', 'product.properties', 'options', 'images'])->findOrFail($sku->id);
+        $sku = Sku::with(['product', 'product.properties', 'options', 'options.property', 'images'])->findOrFail($sku->id);
         return new SkuResource($sku);
     }
 
