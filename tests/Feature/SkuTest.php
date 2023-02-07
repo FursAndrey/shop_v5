@@ -6,6 +6,7 @@ use App\Actions\TestingActions\Create\CreateTestCategoryAction;
 use App\Actions\TestingActions\Create\CreateTestImageAction;
 use App\Actions\TestingActions\Create\CreateTestOptionAction;
 use App\Actions\TestingActions\Create\CreateTestProductAction;
+use App\Actions\TestingActions\Create\CreateTestProductPropertyRelationAction;
 use App\Actions\TestingActions\Create\CreateTestPropertyAction;
 use App\Actions\TestingActions\Create\CreateTestSkuAction;
 use App\Actions\TestingActions\Create\CreateTestSkuOptionRelationAction;
@@ -57,6 +58,7 @@ class SkuTest extends TestCase
         $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
+        (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
         $sku = (new CreateTestSkuAction)(
             (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
@@ -73,6 +75,12 @@ class SkuTest extends TestCase
                     'id' => $product->id,
                     'name' => $product->name,
                     'description' => $product->description,
+                    'properties' => [
+                        [
+                            'id' => $property->id,
+                            'name' => $property->name,
+                        ]
+                    ]
                 ],
                 'options' => [
                     [
