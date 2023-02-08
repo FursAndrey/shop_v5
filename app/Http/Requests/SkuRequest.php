@@ -27,7 +27,7 @@ class SkuRequest extends FormRequest
             'product_id' => 'required|integer|exists:products,id',
             'price' => 'required|numeric|min:0.01',
             'count' => 'required|integer|min:0',
-            'option_id' => 'required|array',
+            'option_id' => 'nullable|array',
             'option_id.*' => 'required|integer|exists:options,id',
             'img' => 'nullable|array',
             'img.*' => 'image|mimes:jpeg,png,jpg',
