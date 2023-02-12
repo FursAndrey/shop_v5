@@ -202,7 +202,7 @@ class SkuTest extends TestCase
         $this->assertDatabaseCount('skus', 1);
 
         unset($sku['option_id']);
-        unset($sku['img']);
+        unset($sku['image']);
 
         $this->assertDatabaseHas('skus', $sku);
         $this->assertDatabaseHas(
@@ -293,7 +293,7 @@ class SkuTest extends TestCase
         $insertedSkuId = (new GetTestInsertedSkuIDAction)($this->get('/api/skus'));
 
         unset($oldSku['option_id']);
-        unset($oldSku['img']);
+        unset($oldSku['image']);
 
         $this->assertDatabaseHas('skus', $oldSku);
         Storage::disk('public')->assertExists('uploads/'.$oldFile->hashName());
@@ -303,7 +303,7 @@ class SkuTest extends TestCase
         $this->put('/api/skus/'.$insertedSkuId, $newSku);
 
         unset($newSku['option_id']);
-        unset($newSku['img']);
+        unset($newSku['image']);
 
         $this->assertDatabaseMissing('skus', $oldSku);
         $this->assertDatabaseHas('skus', $newSku);
@@ -336,7 +336,7 @@ class SkuTest extends TestCase
         $insertedSkuId = (new GetTestInsertedSkuIDAction)($this->get('/api/skus'));
 
         unset($oldSku['option_id']);
-        unset($oldSku['img']);
+        unset($oldSku['image']);
 
         $this->assertDatabaseHas('skus', $oldSku);
         Storage::disk('public')->assertExists('uploads/'.$oldFile->hashName());
@@ -346,7 +346,7 @@ class SkuTest extends TestCase
         $this->patch('/api/skus/'.$insertedSkuId, $newSku);
 
         unset($newSku['option_id']);
-        unset($newSku['img']);
+        unset($newSku['image']);
 
         $this->assertDatabaseMissing('skus', $oldSku);
         $this->assertDatabaseHas('skus', $newSku);
