@@ -97,4 +97,35 @@ class ImageTest extends TestCase
         $this->assertDatabaseMissing('images', ['id' => $image2->id]);
         $this->assertDatabaseMissing('images', ['id' => $image3->id]);
     }
+    
+    public function test_store_images()
+    {
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $option = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
+        $category = (new CreateTestCategoryAction)(
+            (new GetTestCategoryAction)()
+        );
+        $product = (new CreateTestProductAction)(
+            (new GetTestProductAction)($property->id, $category->id)
+        );
+        $sku = (new CreateTestSkuAction)(
+            (new GetTestSkuWithoutImageAction)($product->id, $option->id)
+        );
+        
+        $this->assertDatabaseHas('skus', ['id' => $sku->id]);
+        
+        Storage::fake('public');
+        $file = UploadedFile::fake()->image('test.jpg');
+        Storage::disk('public')->assertMissing('uploads/'.$file->hashName());
+        $this->assertDatabaseMissing('images', ['sku_id' => $sku->id]);
+
+        $this->post('/api/images/'.$sku->id, ['image' => $file]);
+        
+        Storage::disk('public')->assertExists('uploads/'.$file->hashName());
+        $this->assertDatabaseHas('images', ['sku_id' => $sku->id]);
+    }
 }

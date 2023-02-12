@@ -38,3 +38,4 @@ Route::get('option/all', [OptionController::class, 'optionAll'])->name('optionAl
 Route::apiResource('skus', SkuController::class);
 Route::delete('/images/{image}', [ImageController::class, 'destroyOne']);
 Route::delete('/images/all/{sku}', [ImageController::class, 'destroyAll']);
+Route::post('/images/{sku}', [ImageController::class, 'saveImageForSku']);

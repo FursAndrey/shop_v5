@@ -13,13 +13,8 @@ class SaveSkuAttributesAction
     {
         $sku->options()->sync($request->option_id);
 
-        if (!is_null($request->img)) {
-            foreach (SaveImagesAction::all($request->img) as $image) {
-                Image::create([
-                    'sku_id' => $sku->id,
-                    'file' => $image
-                ]);
-            }
+        if (!is_null($request->image)) {
+            SaveImagesAction::withDb($request->image, $sku->id);
         }
     }
 }
