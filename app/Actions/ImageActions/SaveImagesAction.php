@@ -2,6 +2,7 @@
 
 namespace App\Actions\ImageActions;
 
+use App\Models\Image;
 use Generator;
 use Illuminate\Http\UploadedFile;
 
@@ -18,6 +19,16 @@ class SaveImagesAction
             foreach ($files as $image) {
                 yield self::one($image);
             }
+        }
+    }
+
+    public static function withDb(array $images, int $skuId): void
+    {
+        foreach (self::all($images) as $image) {
+            Image::create([
+                'sku_id' => $skuId,
+                'file' => $image
+            ]);
         }
     }
 }

@@ -21,6 +21,7 @@ class ProductResource extends JsonResource
             'description' => $this->description,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'properties' => new PropertyCollection($this->whenLoaded('properties')),
+            'skus' => new SkuCollection($this->whenLoaded('skus')),
         ];
     }
 }
