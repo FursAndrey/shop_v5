@@ -3,14 +3,16 @@
 namespace Tests\Feature;
 
 use App\Actions\TestingActions\Create\CreateTestCategoryAction;
+use App\Actions\TestingActions\Create\CreateTestOptionAction;
 use App\Actions\TestingActions\Create\CreateTestProductAction;
 use App\Actions\TestingActions\Create\CreateTestPropertyAction;
 use App\Actions\TestingActions\Create\CreateTestProductPropertyRelationAction;
-
+use App\Actions\TestingActions\Create\CreateTestSkuAction;
 use App\Actions\TestingActions\Get\GetTestCategoryAction;
+use App\Actions\TestingActions\Get\GetTestOptionAction;
 use App\Actions\TestingActions\Get\GetTestProductAction;
 use App\Actions\TestingActions\Get\GetTestPropertyAction;
-
+use App\Actions\TestingActions\Get\GetTestSkuWithoutImageAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -105,11 +107,17 @@ class ProductTest extends TestCase
         $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
+        $option = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
         $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
         $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
+        );
+        $sku = (new CreateTestSkuAction)(
+            (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
 
         $response = $this->get('/api/products/'.$product->id);
@@ -122,11 +130,17 @@ class ProductTest extends TestCase
         $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
+        $option = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
         $category = (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()
         );
         $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
+        );
+        $sku = (new CreateTestSkuAction)(
+            (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
 
         $response = $this->get('/api/products/'.$product->id);
