@@ -134,13 +134,43 @@ class SkuTest extends TestCase
         $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
+        (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
         $sku = (new CreateTestSkuAction)(
             (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
+        (new CreateTestSkuOptionRelationAction)($sku->id, $option->id);
 
         $response = $this->get('/api/skus/'.$sku->id);
 
-        $response->assertJsonPath('count', $sku->count);
+        $response->assertJsonFragment(
+            [
+                'id' => $sku->id,
+                'count' => $sku->count,
+                'price' => $sku->price,
+                'product' => [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'properties' => [
+                        [
+                            'id' => $property->id,
+                            'name' => $property->name,
+                        ]
+                    ]
+                ],
+                'options' => [
+                    [
+                        'id' => $option->id,
+                        'name' => $option->name,
+                        'property' => [
+                            'id' => $property->id,
+                            'name' => $property->name,
+                        ]
+                    ]
+                ],
+                'images' => [],
+            ]
+        );
     }
 
     public function test_store_without_images()

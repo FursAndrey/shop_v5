@@ -90,14 +90,20 @@ class CurrencyTest extends TestCase
 
         $response = $this->get('/api/currencies/'.$currency->id);
 
-        $response->assertJsonPath('code', $currency->code);
+        $response->assertJsonFragment(
+            [
+                'id' => $currency->id,
+                'code' => $currency->code,
+                'rate' => $currency->rate,
+            ]
+        );
     }
 
     public function test_store()
     {
         $currency = (new GetTestCurrencyAction)();
         $this->assertDatabaseCount('currencies', 0);
-        $response = $this->post('/api/currencies', $currency);
+        $this->post('/api/currencies', $currency);
 
         $this->assertDatabaseCount('currencies', 1);
         $this->assertDatabaseHas('currencies', $currency);

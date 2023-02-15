@@ -91,7 +91,13 @@ class CategoryTest extends TestCase
 
         $response = $this->get('/api/categories/'.$category->id);
 
-        $response->assertJsonPath('name', $category->name);
+        $response->assertJsonFragment(
+            [
+                'id' => $category->id,
+                'name' => $category->name,
+                'products' => [],
+            ]
+        );
     }
 
     public function test_store()

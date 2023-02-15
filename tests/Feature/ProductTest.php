@@ -139,13 +139,38 @@ class ProductTest extends TestCase
         $product = (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
+        (new CreateTestProductPropertyRelationAction)($property->id, $product->id);
         $sku = (new CreateTestSkuAction)(
             (new GetTestSkuWithoutImageAction)($product->id, $option->id)
         );
 
         $response = $this->get('/api/products/'.$product->id);
 
-        $response->assertJsonPath('name', $product->name);
+        $response->assertJsonFragment(
+            [
+                'id' => $product->id,
+                'name' => $product->name,
+                'description' => $product->description,
+                'category' => [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                ],
+                'properties' => [
+                    [
+                        'id' => $property->id,
+                        'name' => $property->name,
+                    ]
+                ],
+                'skus' => [
+                    [
+                        'id' => $sku->id,
+                        'count' => $sku->count,
+                        'price' => $sku->price,
+                        'options' => []
+                    ]
+                ]
+            ]
+        );
     }
 
     public function test_store()
