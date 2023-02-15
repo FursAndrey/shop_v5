@@ -106,7 +106,16 @@ class OptionTest extends TestCase
 
         $response = $this->get('/api/options/'.$option->id);
 
-        $response->assertJsonPath('name', $option->name);
+        $response->assertJsonFragment(
+            [
+                'id' => $option->id,
+                'name' => $option->name,
+                'property' => [
+                    'id' => $property->id,
+                    'name' => $property->name,
+                ],
+            ]
+        );
     }
 
     public function test_store()

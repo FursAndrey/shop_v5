@@ -89,7 +89,14 @@ class PropertyTest extends TestCase
 
         $response = $this->get('/api/properties/'.$property->id);
 
-        $response->assertJsonPath('name', $property->name);
+        $response->assertExactJson(
+            [
+                'id' => $property->id,
+                'name' => $property->name,
+                'products' => [],
+                'options' => [],
+            ]
+        );
     }
 
     public function test_store()
