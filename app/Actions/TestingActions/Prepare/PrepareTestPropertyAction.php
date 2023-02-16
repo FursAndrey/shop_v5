@@ -7,7 +7,7 @@ use App\Actions\TestingActions\Get\GetTestPropertyAction;
 
 class PrepareTestPropertyAction
 {
-    public function prepare(bool $isFull = true): array
+    public function prepare(bool $isFull = false): array
     {
         $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
