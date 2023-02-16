@@ -28,7 +28,8 @@ class PropertyTest extends TestCase
 
     public function test_index_page_json_with_data()
     {
-        $expectedProperty = (new PrepareTestPropertyAction)(isFull: false);
+        $prepareProperty = new PrepareTestPropertyAction;
+        $expectedProperty = $prepareProperty->prepare(isFull: false);
 
         $response = $this->get('/api/properties');
 
@@ -37,8 +38,9 @@ class PropertyTest extends TestCase
 
     public function test_property_all_page_json_with_data()
     {
-        $expectedProperties[] = (new PrepareTestPropertyAction)(isFull: false);
-        $expectedProperties[] = (new PrepareTestPropertyAction)(isFull: false);
+        $prepareProperty = new PrepareTestPropertyAction;
+        $expectedProperties[] = $prepareProperty->prepare(isFull: false);
+        $expectedProperties[] = $prepareProperty->prepare(isFull: false);
 
         $response = $this->get('/api/property/all');
 
@@ -47,7 +49,8 @@ class PropertyTest extends TestCase
 
     public function test_show_page_status_200()
     {
-        $expectedProperty = (new PrepareTestPropertyAction)(isFull: false);
+        $prepareProperty = new PrepareTestPropertyAction;
+        $expectedProperty = $prepareProperty->prepare(isFull: false);
 
         $response = $this->get('/api/properties/'.$expectedProperty['id']);
 
@@ -56,7 +59,8 @@ class PropertyTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $expectedProperty = (new PrepareTestPropertyAction)(isFull: true);
+        $prepareProperty = new PrepareTestPropertyAction;
+        $expectedProperty = $prepareProperty->prepare(isFull: true);
 
         $response = $this->get('/api/properties/'.$expectedProperty['id']);
 
@@ -75,7 +79,8 @@ class PropertyTest extends TestCase
 
     public function test_destroy()
     {
-        $expectedProperty = (new PrepareTestPropertyAction)(isFull: false);
+        $prepareProperty = new PrepareTestPropertyAction;
+        $expectedProperty = $prepareProperty->prepare(isFull: false);
 
         $this->assertDatabaseHas('properties', $expectedProperty);
         $this->delete('/api/properties/'.$expectedProperty['id']);
@@ -84,7 +89,8 @@ class PropertyTest extends TestCase
 
     public function test_update()
     {
-        $expectedProperty = (new PrepareTestPropertyAction)(isFull: false);
+        $prepareProperty = new PrepareTestPropertyAction;
+        $expectedProperty = $prepareProperty->prepare(isFull: false);
         $this->assertDatabaseHas('properties', $expectedProperty);
 
         $newProperty = (new GetTestPropertyAction)();
