@@ -104,7 +104,7 @@ class CategoryTest extends TestCase
     {
         $category = (new GetTestCategoryAction)();
         $this->assertDatabaseCount('categories', 0);
-        $response = $this->post('/api/categories', $category);
+        $this->post('/api/categories', $category);
 
         $this->assertDatabaseCount('categories', 1);
         $this->assertDatabaseHas('categories', $category);
@@ -131,7 +131,7 @@ class CategoryTest extends TestCase
             (new GetTestPropertyAction)()
         );
         
-        $product = (new CreateTestProductAction)(
+        (new CreateTestProductAction)(
             (new GetTestProductAction)($property->id, $category->id)
         );
         
