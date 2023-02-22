@@ -2,7 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Actions\TestingActions\Prepare\PrepareTestOptionAction;
+use App\Actions\TestingActions\Create\CreateTestOptionAction;
+use App\Actions\TestingActions\Create\CreateTestPropertyAction;
+
+use App\Actions\TestingActions\Get\GetTestOptionAction;
+use App\Actions\TestingActions\Get\GetTestPropertyAction;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -27,77 +32,134 @@ class OptionTest extends TestCase
 
     public function test_index_page_json_with_data()
     {
-        $prepareOption = new PrepareTestOptionAction;
-        $expectedOption = $prepareOption->prepare(isFull: true);
-        
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $option = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
+
         $response = $this->get('/api/options');
 
-        $response->assertJsonFragment($expectedOption);
+        $response->assertJsonFragment(
+            [
+                'id' => $option->id,
+                'name' => $option->name,
+                'property' => [
+                    'id' => $property->id,
+                    'name' => $property->name,
+                ],
+            ]
+        );
     }
 
     public function test_option_all_page_json_with_data()
     {
-        $prepareOption = new PrepareTestOptionAction;
-        $expectedOption = $prepareOption->prepare(isFull: false, optionsCount: 2);
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $option1 = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
+        $option2 = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
 
         $response = $this->get('/api/option/all');
 
-        $response->assertExactJson($expectedOption);
+        $response->assertExactJson(
+            [
+                [
+                    'id' => $option1->id,
+                    'name' => $option1->name,
+                ],
+                [
+                    'id' => $option2->id,
+                    'name' => $option2->name,
+                ]
+            ]
+        );
     }
 
     public function test_show_page_status_200()
     {
-        $prepareOption = new PrepareTestOptionAction;
-        $expectedOption = $prepareOption->prepare(isFull: false);
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $option = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
 
-        $response = $this->get('/api/options/'.$expectedOption['id']);
+        $response = $this->get('/api/options/'.$option->id);
 
         $response->assertStatus(200);
     }
 
     public function test_show_page_json_data()
     {
-        $prepareOption = new PrepareTestOptionAction;
-        $expectedOption = $prepareOption->prepare(isFull: true);
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $option = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
 
-        $response = $this->get('/api/options/'.$expectedOption['id']);
+        $response = $this->get('/api/options/'.$option->id);
 
-        $response->assertJsonFragment($expectedOption);
+        $response->assertJsonFragment(
+            [
+                'id' => $option->id,
+                'name' => $option->name,
+                'property' => [
+                    'id' => $property->id,
+                    'name' => $property->name,
+                ],
+            ]
+        );
     }
 
     public function test_store()
     {
-        $prepareOption = new PrepareTestOptionAction;
-        $expectedOption = $prepareOption->prepareNoCreate();
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
 
+        $option = (new GetTestOptionAction)($property->id);
         $this->assertDatabaseCount('options', 0);
-        $this->post('/api/options', $expectedOption);
+        $this->post('/api/options', $option);
 
         $this->assertDatabaseCount('options', 1);
-        $this->assertDatabaseHas('options', $expectedOption);
+        $this->assertDatabaseHas('options', $option);
     }
 
     public function test_destroy()
     {
-        $prepareOption = new PrepareTestOptionAction;
-        $expectedOption = $prepareOption->prepare(isFull: false);
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $option = (new CreateTestOptionAction)(
+            (new GetTestOptionAction)($property->id)
+        );
 
-        $this->assertDatabaseHas('options', $expectedOption);
-        $this->delete('/api/options/'.$expectedOption['id']);
-        $this->assertDatabaseMissing('options', $expectedOption);
+        $this->assertDatabaseHas('options', ['id' => $option->id]);
+        $this->delete('/api/options/'.$option->id);
+        $this->assertDatabaseMissing('options', ['id' => $option->id]);
     }
 
     public function test_update()
     {
-        $prepareOption = new PrepareTestOptionAction;
-        $expectedOldOption = $prepareOption->prepare(isFull: false);
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
 
-        $this->assertDatabaseHas('options', $expectedOldOption);
+        $oldOption = (new GetTestOptionAction)($property->id);
+        $option = (new CreateTestOptionAction)($oldOption);
+        $this->assertDatabaseHas('options', $oldOption);
 
-        $expectedNewOption = $prepareOption->prepareNoCreate();
-        $this->put('/api/options/'.$expectedOldOption['id'], $expectedNewOption);
+        $newOption = (new GetTestOptionAction)($property->id);
+        $this->put('/api/options/'.$option->id, $newOption);
 
-        $this->assertDatabaseMissing('options', $expectedOldOption);
-        $this->assertDatabaseHas('options', $expectedNewOption);
+        $this->assertDatabaseMissing('options', $oldOption);
+        $this->assertDatabaseHas('options', $newOption);
     }
 }

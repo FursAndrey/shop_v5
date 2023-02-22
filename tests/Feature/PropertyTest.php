@@ -1,70 +1,84 @@
 <?php
-
 namespace Tests\Feature;
-
+use App\Actions\TestingActions\Create\CreateTestPropertyAction;
 use App\Actions\TestingActions\Get\GetTestPropertyAction;
-use App\Actions\TestingActions\Prepare\PrepareTestPropertyAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
 class PropertyTest extends TestCase
 {
     use RefreshDatabase;
-
     public function test_index_page_status_200()
     {
         $response = $this->get('/api/properties');
-
         $response->assertStatus(200);
     }
-
     public function test_index_page_json_without_data()
     {
         $response = $this->get('/api/properties');
-
         $response->assertJsonPath('data', []);
     }
-
     public function test_index_page_json_with_data()
     {
-        $prepareProperty = new PrepareTestPropertyAction;
-        $expectedProperty = $prepareProperty->prepare(isFull: false);
-
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
         $response = $this->get('/api/properties');
-
-        $response->assertJsonFragment($expectedProperty);
+        $response->assertJsonFragment(
+            [
+                'id' => $property->id,
+                'name' => $property->name,
+                'products' => [],
+                'options' => [],
+            ]
+        );
     }
-
     public function test_property_all_page_json_with_data()
     {
-        $prepareProperty = new PrepareTestPropertyAction;
-        $expectedProperties[] = $prepareProperty->prepare(isFull: false);
-        $expectedProperties[] = $prepareProperty->prepare(isFull: false);
-
+        $property1 = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $property2 = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
         $response = $this->get('/api/property/all');
-
-        $response->assertExactJson($expectedProperties);
+        $response->assertExactJson(
+            [
+                [
+                    'id' => $property1->id,
+                    'name' => $property1->name,
+                ],
+                [
+                    'id' => $property2->id,
+                    'name' => $property2->name,
+                ]
+            ]
+        );
     }
-
     public function test_show_page_status_200()
     {
-        $prepareProperty = new PrepareTestPropertyAction;
-        $expectedProperty = $prepareProperty->prepare(isFull: false);
-
-        $response = $this->get('/api/properties/'.$expectedProperty['id']);
-
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $response = $this->get('/api/properties/'.$property->id);
         $response->assertStatus(200);
     }
-
     public function test_show_page_json_data()
     {
-        $prepareProperty = new PrepareTestPropertyAction;
-        $expectedProperty = $prepareProperty->prepare(isFull: true);
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
 
-        $response = $this->get('/api/properties/'.$expectedProperty['id']);
+        $response = $this->get('/api/properties/'.$property->id);
 
-        $response->assertExactJson($expectedProperty);
+        $response->assertExactJson(
+            [
+                'id' => $property->id,
+                'name' => $property->name,
+                'products' => [],
+                'options' => [],
+            ]
+        );
     }
 
     public function test_store()
@@ -72,31 +86,26 @@ class PropertyTest extends TestCase
         $property = (new GetTestPropertyAction)();
         $this->assertDatabaseCount('properties', 0);
         $this->post('/api/properties', $property);
-
         $this->assertDatabaseCount('properties', 1);
         $this->assertDatabaseHas('properties', $property);
     }
-
     public function test_destroy()
     {
-        $prepareProperty = new PrepareTestPropertyAction;
-        $expectedProperty = $prepareProperty->prepare(isFull: false);
-
-        $this->assertDatabaseHas('properties', $expectedProperty);
-        $this->delete('/api/properties/'.$expectedProperty['id']);
-        $this->assertDatabaseMissing('properties', $expectedProperty);
+        $property = (new CreateTestPropertyAction)(
+            (new GetTestPropertyAction)()
+        );
+        $this->assertDatabaseHas('properties', ['id' => $property->id]);
+        $this->delete('/api/properties/'.$property->id);
+        $this->assertDatabaseMissing('properties', ['id' => $property->id]);
     }
-
     public function test_update()
     {
-        $prepareProperty = new PrepareTestPropertyAction;
-        $expectedProperty = $prepareProperty->prepare(isFull: false);
-        $this->assertDatabaseHas('properties', $expectedProperty);
-
+        $oldProperty = (new GetTestPropertyAction)();
+        $property = (new CreateTestPropertyAction)($oldProperty);
+        $this->assertDatabaseHas('properties', $oldProperty);
         $newProperty = (new GetTestPropertyAction)();
-        $this->put('/api/properties/'.$expectedProperty['id'], $newProperty);
-
-        $this->assertDatabaseMissing('properties', $expectedProperty);
+        $this->put('/api/properties/'.$property->id, $newProperty);
+        $this->assertDatabaseMissing('properties', $oldProperty);
         $this->assertDatabaseHas('properties', $newProperty);
     }
 }
