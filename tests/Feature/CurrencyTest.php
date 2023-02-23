@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Actions\TestingActions\Create\CreateTestCurrencyAction;
-use App\Actions\TestingActions\Get\GetTestCurrencyAction;
 use App\Actions\TestingActions\Prepare\PrepareTestCurrencyAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
