@@ -4,49 +4,63 @@ namespace App\Actions\TestingActions\Prepare;
 
 use App\Actions\TestingActions\Create\CreateTestOptionAction;
 use App\Actions\TestingActions\Get\GetTestOptionAction;
+use App\Models\Option;
 
-class PrepareTestOptionAction extends PrepareTestPropertyAction
+class PrepareTestOptionAction
 {
-    private $property = null;
+    private static $property = null;
 
-    public function prepare(bool $isFull = true, int $optionsCount = 1): array
+    public function __construct()
     {
-        $this->property = parent::prepare();
-        
-        if ($optionsCount == 1) {
-            $arr = $this->prepareOne($isFull);
+        if (is_null(self::$property)) {
+            self::$property = (new PrepareTestPropertyAction)->short();
         } else {
-            for ($i = 0; $i < $optionsCount; $i++) {
-                $arr[] = $this->prepareOne($isFull);
-            }
-        }
 
-        return $arr;
+        }
     }
 
-    public function prepareNoCreate(): array
+    public function __destruct()
     {
-        if (is_null($this->property)) {
-            $this->property = parent::prepare();
-        }
-        return (new GetTestOptionAction)($this->property['id']);
+        self::$property = null;
     }
 
-    private function prepareOne(bool $isFull = true): array
+    public function short(): array
     {
-        $option = (new CreateTestOptionAction)(
-            (new GetTestOptionAction)($this->property['id'])
-        );
-        
+        $option = $this->intoDB();
+
         $arr = [
             'id' => $option->id,
             'name' => $option->name,
         ];
 
-        if ($isFull) {
-            $arr['property'] = $this->property;
-        }
+        return $arr;
+    }
+
+    public function full(): array
+    {
+        $option = $this->intoDB();
+
+        $arr = [
+            'id' => $option->id,
+            'name' => $option->name,
+            'property' => [
+                'id' => self::$property['id'],
+                'name' => self::$property['name'],
+            ],
+        ];
 
         return $arr;
+    }
+
+    public function noDB(): array
+    {
+        return (new GetTestOptionAction)(self::$property['id']);
+    }
+
+    private function intoDB(): Option
+    {
+        return (new CreateTestOptionAction)(
+            (new GetTestOptionAction)(self::$property['id'])
+        );
     }
 }
