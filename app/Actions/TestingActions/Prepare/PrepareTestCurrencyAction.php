@@ -10,7 +10,7 @@ class PrepareTestCurrencyAction
 {
     public function short(): array
     {
-        $currency = $this->getProperty();
+        $currency = $this->intoDB();
 
         $arr = [
             'id' => $currency->id,
@@ -23,7 +23,7 @@ class PrepareTestCurrencyAction
 
     public function full(): array
     {
-        // $currency = $this->getProperty();
+        // $currency = $this->intoDB();
 
         // $arr = [
         //     'id' => $currency->id,
@@ -40,7 +40,7 @@ class PrepareTestCurrencyAction
         return (new GetTestCurrencyAction)();
     }
 
-    private function getProperty(): Currency
+    private function intoDB(): Currency
     {
         return (new CreateTestCurrencyAction)(
             (new GetTestCurrencyAction)()

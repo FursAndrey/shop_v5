@@ -26,7 +26,7 @@ class PrepareTestOptionAction
 
     public function short(): array
     {
-        $option = $this->getProperty();
+        $option = $this->intoDB();
 
         $arr = [
             'id' => $option->id,
@@ -38,7 +38,7 @@ class PrepareTestOptionAction
 
     public function full(): array
     {
-        $option = $this->getProperty();
+        $option = $this->intoDB();
 
         $arr = [
             'id' => $option->id,
@@ -57,7 +57,7 @@ class PrepareTestOptionAction
         return (new GetTestOptionAction)(self::$property['id']);
     }
 
-    private function getProperty(): Option
+    private function intoDB(): Option
     {
         return (new CreateTestOptionAction)(
             (new GetTestOptionAction)(self::$property['id'])

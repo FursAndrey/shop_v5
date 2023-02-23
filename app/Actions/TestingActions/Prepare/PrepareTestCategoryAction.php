@@ -10,7 +10,7 @@ class PrepareTestCategoryAction
 {
     public function short(): array
     {
-        $category = $this->getProperty();
+        $category = $this->intoDB();
 
         $arr = [
             'id' => $category->id,
@@ -22,7 +22,7 @@ class PrepareTestCategoryAction
 
     public function full(): array
     {
-        $category = $this->getProperty();
+        $category = $this->intoDB();
 
         $arr = [
             'id' => $category->id,
@@ -38,7 +38,7 @@ class PrepareTestCategoryAction
         return (new GetTestCategoryAction)();
     }
 
-    private function getProperty(): Category
+    private function intoDB(): Category
     {
         return (new CreateTestCategoryAction)(
             (new GetTestCategoryAction)()

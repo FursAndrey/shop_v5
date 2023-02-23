@@ -10,7 +10,7 @@ class PrepareTestPropertyAction
 {
     public function short(): array
     {
-        $property = $this->getProperty();
+        $property = $this->intoDB();
 
         $arr = [
             'id' => $property->id,
@@ -22,7 +22,7 @@ class PrepareTestPropertyAction
 
     public function full(): array
     {
-        $property = $this->getProperty();
+        $property = $this->intoDB();
 
         $arr = [
             'id' => $property->id,
@@ -39,7 +39,7 @@ class PrepareTestPropertyAction
         return (new GetTestPropertyAction)();
     }
 
-    private function getProperty(): Property
+    private function intoDB(): Property
     {
         return (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
