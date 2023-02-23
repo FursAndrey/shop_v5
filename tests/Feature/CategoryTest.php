@@ -2,12 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Actions\TestingActions\Create\CreateTestCategoryAction;
 use App\Actions\TestingActions\Create\CreateTestProductAction;
 use App\Actions\TestingActions\Create\CreateTestPropertyAction;
-use App\Actions\TestingActions\Get\GetTestCategoryAction;
 use App\Actions\TestingActions\Get\GetTestProductAction;
 use App\Actions\TestingActions\Get\GetTestPropertyAction;
+use App\Actions\TestingActions\Prepare\PrepareTestCategoryAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -32,77 +31,49 @@ class CategoryTest extends TestCase
 
     public function test_category_all_page_json_with_data()
     {
-        $category1 = (new CreateTestCategoryAction)(
-            (new GetTestCategoryAction)()
-        );
-        $category2 = (new CreateTestCategoryAction)(
-            (new GetTestCategoryAction)()
-        );
+        $category1 = (new PrepareTestCategoryAction)->short();
+        $category2 = (new PrepareTestCategoryAction)->short();
 
         $response = $this->get('/api/category/all');
 
         $response->assertExactJson(
             [
-                [
-                    'id' => $category1->id,
-                    'name' => $category1->name,
-                ],
-                [
-                    'id' => $category2->id,
-                    'name' => $category2->name,
-                ]
+                $category1,
+                $category2,
             ]
         );
     }
 
     public function test_index_page_json_with_data()
     {
-        $category = (new CreateTestCategoryAction)(
-            (new GetTestCategoryAction)()
-        );
+        $category = (new PrepareTestCategoryAction)->full();
 
         $response = $this->get('/api/categories');
 
-        $response->assertJsonFragment(
-            [
-                'id' => $category->id,
-                'name' => $category->name,
-                'products' => [],
-            ]
-        );
+        $response->assertJsonFragment($category);
     }
 
     public function test_show_page_status_200()
     {
-        $category = (new CreateTestCategoryAction)(
-            (new GetTestCategoryAction)()
-        );
+        $category = (new PrepareTestCategoryAction)->short();
 
-        $response = $this->get('/api/categories/'.$category->id);
+        $response = $this->get('/api/categories/'.$category['id']);
 
         $response->assertStatus(200);
     }
 
     public function test_show_page_json_data()
     {
-        $category = (new CreateTestCategoryAction)(
-            (new GetTestCategoryAction)()
-        );
+        $category = (new PrepareTestCategoryAction)->full();
 
-        $response = $this->get('/api/categories/'.$category->id);
+        $response = $this->get('/api/categories/'.$category['id']);
 
-        $response->assertJsonFragment(
-            [
-                'id' => $category->id,
-                'name' => $category->name,
-                'products' => [],
-            ]
-        );
+        $response->assertJsonFragment($category);
     }
 
     public function test_store()
     {
-        $category = (new GetTestCategoryAction)();
+        $category = (new PrepareTestCategoryAction)->noDB();
         $this->assertDatabaseCount('categories', 0);
         $this->post('/api/categories', $category);
 
@@ -112,43 +83,38 @@ class CategoryTest extends TestCase
 
     public function test_destroy_without_product()
     {
-        $category = (new CreateTestCategoryAction)(
-            (new GetTestCategoryAction)()
-        );
+        $category = (new PrepareTestCategoryAction)->short();
 
-        $this->assertDatabaseHas('categories', ['id' => $category->id]);
-        $this->delete('/api/categories/'.$category->id);
-        $this->assertDatabaseMissing('categories', ['id' => $category->id]);
+        $this->assertDatabaseHas('categories', $category);
+        $this->delete('/api/categories/'.$category['id']);
+        $this->assertDatabaseMissing('categories', $category);
     }
 
     public function test_destroy_with_product()
     {
-        $category = (new CreateTestCategoryAction)(
-            (new GetTestCategoryAction)()
-        );
+        $category = (new PrepareTestCategoryAction)->short();
 
         $property = (new CreateTestPropertyAction)(
             (new GetTestPropertyAction)()
         );
         
         (new CreateTestProductAction)(
-            (new GetTestProductAction)($property->id, $category->id)
+            (new GetTestProductAction)($property->id, $category['id'])
         );
         
-        $this->assertDatabaseHas('categories', ['id' => $category->id]);
-        $response = $this->delete('/api/categories/'.$category->id);
+        $this->assertDatabaseHas('categories', $category);
+        $response = $this->delete('/api/categories/'.$category['id']);
         $response->assertStatus(409);
-        $this->assertDatabaseHas('categories', ['id' => $category->id]);
+        $this->assertDatabaseHas('categories', $category);
     }
 
     public function test_update()
     {
-        $oldCategory = (new GetTestCategoryAction)();
-        $category = (new CreateTestCategoryAction)($oldCategory);
+        $oldCategory = (new PrepareTestCategoryAction)->short();
         $this->assertDatabaseHas('categories', $oldCategory);
 
-        $newCategory = (new GetTestCategoryAction)();
-        $this->put('/api/categories/'.$category->id, $newCategory);
+        $newCategory = (new PrepareTestCategoryAction)->noDB();
+        $this->put('/api/categories/'.$oldCategory['id'], $newCategory);
 
         $this->assertDatabaseMissing('categories', $oldCategory);
         $this->assertDatabaseHas('categories', $newCategory);
