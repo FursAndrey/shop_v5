@@ -45,7 +45,6 @@ class PrepareTestProductAction
     public function full(): array
     {
         $product = $this->intoDB();
-        (new CreateTestProductPropertyRelationAction)(self::$property['id'], $product->id);
 
         $arr = [
             'id' => $product->id,
@@ -73,8 +72,19 @@ class PrepareTestProductAction
 
     private function intoDB(): Product
     {
-        return (new CreateTestProductAction)(
+        $product = (new CreateTestProductAction)(
             (new GetTestProductAction)(self::$property['id'], self::$category['id'])
         );
+        (new CreateTestProductPropertyRelationAction)(self::$property['id'], $product->id);
+
+        return $product;
+    }
+
+    public function getDependencies()
+    {
+        return [
+            'category' => self::$category,
+            'property' => self::$property,
+        ];
     }
 }

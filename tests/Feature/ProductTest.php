@@ -2,11 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Actions\TestingActions\Create\CreateTestOptionAction;
-use App\Actions\TestingActions\Create\CreateTestSkuAction;
-use App\Actions\TestingActions\Get\GetTestOptionAction;
-use App\Actions\TestingActions\Get\GetTestSkuWithoutImageAction;
 use App\Actions\TestingActions\Prepare\PrepareTestProductAction;
+use App\Actions\TestingActions\Prepare\PrepareTestSkuAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -64,25 +61,10 @@ class ProductTest extends TestCase
 
     public function test_show_page_json_data()
     {
-        $product = (new PrepareTestProductAction)->full();
-
-        $option = (new CreateTestOptionAction)(
-            (new GetTestOptionAction)($product['properties'][0]['id'])
-        );
-        $sku = (new CreateTestSkuAction)(
-            (new GetTestSkuWithoutImageAction)($product['id'], $option->id)
-        );
+        $product = (new PrepareTestSkuAction)->getProductWithSku();
 
         $response = $this->get('/api/products/'.$product['id']);
 
-        $product['skus'] = [
-            [
-                'id' => $sku->id,
-                'count' => $sku->count,
-                'price' => $sku->price,
-                'options' => []
-            ]
-        ];
         $response->assertJsonFragment($product);
     }
 
