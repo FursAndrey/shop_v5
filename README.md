@@ -3,7 +3,11 @@
 - загрузить Laravel: composer install
 - копировать .env.example в .env: copy .env.example .env
 - создать новый ключ для проекта команда: php artisan key:generate
+- копировать .env в .env.testing: copy .env.example .env.testing
+- в файле .env.testing оставить только APP_NAME, APP_ENV, APP_KEY, APP_DEBUG, APP_URL и подключение к БД
 - создаю базу данных для проекта
+- создаю базу данных для тестирования проекта
 - в файле .env настроить подключение к базу данных
+- в файле .env.testing настроить подключение к тестовой базу данных
 - создать таблицы: php artisan migrate
 - запустить используемый сервер (в моем случае это OpenServer)
