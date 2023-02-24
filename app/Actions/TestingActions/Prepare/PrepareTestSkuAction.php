@@ -5,6 +5,7 @@ namespace App\Actions\TestingActions\Prepare;
 use App\Actions\TestingActions\Create\CreateTestSkuAction;
 use App\Actions\TestingActions\Create\CreateTestSkuOptionRelationAction;
 use App\Actions\TestingActions\Get\GetTestSkuWithoutImageAction;
+use Illuminate\Http\Testing\File;
 use App\Models\Sku;
 
 class PrepareTestSkuAction
@@ -75,6 +76,19 @@ class PrepareTestSkuAction
 
         return $arr;
     }
+    
+    public function shortImage(File $file): array
+    {
+        $sku = $this->intoDBImage($file);
+
+        $arr = [
+            'id' => $sku->id,
+            'count' => $sku->count,
+            'price' => $sku->price,
+        ];
+
+        return $arr;
+    }
 
     public function getProductWithSku(): array
     {
@@ -112,11 +126,27 @@ class PrepareTestSkuAction
         return (new GetTestSkuWithoutImageAction)(self::$product['id'], self::$option['id']);
     }
 
+    public function noDbImage(File $file): array
+    {
+        $sku = $this->noDB();
+        $sku['image'] = [
+            $file
+        ];
+
+        return $sku;
+    }
+
     private function intoDB(): Sku
     {
-        $sku = (new CreateTestSkuAction)(
-            (new GetTestSkuWithoutImageAction)(self::$product['id'], self::$option['id'])
-        );        
+        $sku = (new CreateTestSkuAction)($this->noDB());        
+        (new CreateTestSkuOptionRelationAction)($sku->id, self::$option['id']);
+
+        return $sku;
+    }
+
+    private function intoDBImage(File $file): Sku
+    {
+        $sku = (new CreateTestSkuAction)($this->noDbImage($file));        
         (new CreateTestSkuOptionRelationAction)($sku->id, self::$option['id']);
 
         return $sku;
