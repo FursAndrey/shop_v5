@@ -11,30 +11,21 @@ use Illuminate\Http\Testing\File;
 
 class PrepareTestImageAction
 {
-    // public function short(): array
-    // {
-    //     $category = $this->intoDB();
+    public function short(int $skuId): array
+    {
+        $image = $this->intoDB($skuId);
 
-    //     $arr = [
-    //         'id' => $category->id,
-    //         'name' => $category->name,
-    //     ];
+        $arr = [
+            'id' => $image->id,
+        ];
 
-    //     return $arr;
-    // }
+        return $arr;
+    }
 
-    // public function full(): array
-    // {
-    //     $category = $this->intoDB();
-
-    //     $arr = [
-    //         'id' => $category->id,
-    //         'name' => $category->name,
-    //         'products' => [],
-    //     ];
-
-    //     return $arr;
-    // }
+    public function full(int $skuId): array
+    {
+        return $this->short($skuId);
+    }
 
     public function noDB(): File
     {
@@ -44,7 +35,7 @@ class PrepareTestImageAction
         return $file;
     }
 
-    public function intoDB(int $skuId): Image
+    private function intoDB(int $skuId): Image
     {
         $file = $this->noDB();
         return (new CreateTestImageAction)((new GetTestImageAction)($skuId, $file->hashName()));
