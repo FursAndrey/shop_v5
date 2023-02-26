@@ -119,7 +119,7 @@ class SkuTest extends TestCase
         Storage::fake('public');
         $file = UploadedFile::fake()->image('test.jpg');
 
-        $sku = (new PrepareTestSkuAction)->shortImage($file);
+        $sku = (new PrepareTestSkuAction)->short();
 
         $image = (new CreateTestImageAction)((new GetTestImageAction)($sku['id'], $file->hashName()));
 

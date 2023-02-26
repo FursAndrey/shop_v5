@@ -76,19 +76,6 @@ class PrepareTestSkuAction
 
         return $arr;
     }
-    
-    public function shortImage(File $file): array
-    {
-        $sku = $this->intoDBImage($file);
-
-        $arr = [
-            'id' => $sku->id,
-            'count' => $sku->count,
-            'price' => $sku->price,
-        ];
-
-        return $arr;
-    }
 
     public function getProductWithSku(): array
     {
@@ -139,14 +126,6 @@ class PrepareTestSkuAction
     private function intoDB(): Sku
     {
         $sku = (new CreateTestSkuAction)($this->noDB());        
-        (new CreateTestSkuOptionRelationAction)($sku->id, self::$option['id']);
-
-        return $sku;
-    }
-
-    private function intoDBImage(File $file): Sku
-    {
-        $sku = (new CreateTestSkuAction)($this->noDbImage($file));        
         (new CreateTestSkuOptionRelationAction)($sku->id, self::$option['id']);
 
         return $sku;
