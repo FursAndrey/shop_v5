@@ -2,6 +2,9 @@
 
 namespace App\Actions\TestingActions\Prepare;
 
+use App\Actions\TestingActions\Create\CreateTestImageAction;
+use App\Actions\TestingActions\Get\GetTestImageAction;
+use App\Models\Image;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Testing\File;
@@ -41,10 +44,9 @@ class PrepareTestImageAction
         return $file;
     }
 
-    // private function intoDB(): Category
-    // {
-    //     return (new CreateTestCategoryAction)(
-    //         (new GetTestCategoryAction)()
-    //     );
-    // }
+    public function intoDB(int $skuId): Image
+    {
+        $file = $this->noDB();
+        return (new CreateTestImageAction)((new GetTestImageAction)($skuId, $file->hashName()));
+    }
 }

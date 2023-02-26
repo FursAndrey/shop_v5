@@ -115,10 +115,8 @@ class SkuTest extends TestCase
 
     public function test_destroy_with_images()
     {
-        $file = (new PrepareTestImageAction)->noDB();
         $sku = (new PrepareTestSkuAction)->short();
-
-        $image = (new CreateTestImageAction)((new GetTestImageAction)($sku['id'], $file->hashName()));
+        $image = (new PrepareTestImageAction)->intoDB($sku['id']);
 
         $this->assertDatabaseHas('skus', $sku);
         $this->assertDatabaseHas('images', ['id' => $image->id]);
