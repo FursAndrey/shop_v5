@@ -6,7 +6,7 @@ use App\Actions\TestingActions\Create\CreateTestImageAction;
 
 use App\Actions\TestingActions\Get\GetTestImageAction;
 use App\Actions\TestingActions\Get\GetTestInsertedSkuIDAction;
-
+use App\Actions\TestingActions\Prepare\PrepareTestImageAction;
 use App\Actions\TestingActions\Prepare\PrepareTestSkuAction;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -82,8 +82,7 @@ class SkuTest extends TestCase
 
     public function test_store_with_images()
     {
-        Storage::fake('public');
-        $file = UploadedFile::fake()->image('test.jpg');
+        $file = (new PrepareTestImageAction)->noDB();
         $sku = (new PrepareTestSkuAction)->noDbImage($file);
 
         $this->assertDatabaseCount('skus', 0);
@@ -116,9 +115,7 @@ class SkuTest extends TestCase
 
     public function test_destroy_with_images()
     {
-        Storage::fake('public');
-        $file = UploadedFile::fake()->image('test.jpg');
-
+        $file = (new PrepareTestImageAction)->noDB();
         $sku = (new PrepareTestSkuAction)->short();
 
         $image = (new CreateTestImageAction)((new GetTestImageAction)($sku['id'], $file->hashName()));
@@ -132,9 +129,8 @@ class SkuTest extends TestCase
 
     public function test_update_put_with_images()
     {
-        Storage::fake('public');
-        $oldFile = UploadedFile::fake()->image('test.jpg');
-        $newFile = UploadedFile::fake()->image('test.jpg');
+        $oldFile = (new PrepareTestImageAction)->noDB();
+        $newFile = (new PrepareTestImageAction)->noDB();
 
         $oldSku = (new PrepareTestSkuAction)->noDbImage($oldFile);
         $this->post('/api/skus', $oldSku);
@@ -162,9 +158,8 @@ class SkuTest extends TestCase
 
     public function test_update_patch_with_images()
     {
-        Storage::fake('public');
-        $oldFile = UploadedFile::fake()->image('test.jpg');
-        $newFile = UploadedFile::fake()->image('test.jpg');
+        $oldFile = (new PrepareTestImageAction)->noDB();
+        $newFile = (new PrepareTestImageAction)->noDB();
 
         $oldSku = (new PrepareTestSkuAction)->noDbImage($oldFile);
         $this->post('/api/skus', $oldSku);
