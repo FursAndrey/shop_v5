@@ -19,6 +19,8 @@ class OptionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'property' => new PropertyResource($this->whenLoaded('property')),
+            //костыль, подумать про согласование с фронтом
+            // 'property_id' => $this->property->id,
         ];
     }
 }
